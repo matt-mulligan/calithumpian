@@ -89,6 +89,7 @@ class Card (object):
         self.suit = self.determine_suit(suit_value)
         self.rank = self.determine_rank()
         self.name = self.determine_name()
+        self.img = self.determine_img_file()
 
     @staticmethod
     def determine_suit(suit_value):
@@ -128,3 +129,18 @@ class Card (object):
         """
 
         return f"{self.rank} of {self.suit}"
+
+    def determine_img_file(self):
+        """
+        sets the correct image file path from the static resources
+        :return:
+        """
+
+        val = {
+            2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10",
+            11: "J", 12: "Q", 13: "K", 14: "A"
+        }[self.value]
+
+        suit = self.suit[0]
+
+        return f"./static/img/cards/{val}{suit}.png"

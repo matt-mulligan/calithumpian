@@ -1,13 +1,16 @@
-from flask import request, redirect, url_for
-from flask_socketio import emit, join_room, leave_room
+from collections import OrderedDict
+
+from flask import request
+from flask_socketio import emit
+
+from .game import Calithumpian
 from .. import socketio
 from ..main import html_builder
-from.game import Calithumpian
-
 
 HTML_TAG_PARAGRAPH = "p"
 
-PLAYERS = {}
+PLAYERS = OrderedDict()
+
 
 # --- Events --------------------
 @socketio.on("connect")
@@ -32,10 +35,6 @@ def event_client_identify(data):
     client = request.sid
     if data["player_name"] not in PLAYERS.keys():
 
-        # Register Player
-        PLAYERS[data["player_name"]] = {"client": client}
-        print(f"Player '{data['player_name']}' has joined the game!")
-
         # Send Message to new Player
         message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH, f"SYSTEM: Welcome to the game {data['player_name']}")
         emit("identify", {"action": "identify_accepted", "message": message})
@@ -44,6 +43,19 @@ def event_client_identify(data):
         message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH,
                                               f"SYSTEM: New Player {data['player_name']} has entered the game!")
         message_player_chat(message, all=True)
+
+        # update score table with all current players
+        for player in PLAYERS.keys():
+            emit('add_player_to_score', {"player_name": player})
+
+        # add new player to ALL players score tables
+        print("BEFORE CALL")
+        emit('add_player_to_score', {"player_name": data["player_name"]}, broadcast=True)
+        print("AFTER CALL")
+
+        # Register Player
+        PLAYERS[data["player_name"]] = {"client": client}
+        print(f"Player '{data['player_name']}' has joined the game!")
 
         # Update Player List
         update_players_list()
@@ -65,6 +77,8 @@ def event_client_chat(data):
 
 @socketio.on("client_start_game")
 def event_start_game(data):
+
+    emit("update_score_row", {"row_index": 5, "player_scores": [1, 2, 3]}, broadcast=True)
 
     game = Calithumpian(PLAYERS.keys())
     game.play()

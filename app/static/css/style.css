@@ -2,6 +2,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: arial, sans-serif;
 }
 
 
@@ -51,6 +52,13 @@
 
 .content {
     grid-area: content;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+    "scores play_surface play_surface play_surface"
+    "scores play_surface play_surface play_surface"
+    "scores player_cards player_cards player_cards";
+
     background-color: bisque;
 }
 
@@ -112,6 +120,34 @@
     "player_title"
     "player_list";
 }
+
+
+
+
+/* SECOND LEVEL (CONTENT) GRID ELEMENTS */
+.scores {
+    padding: 5px;
+    grid-area: scores;
+}
+
+.player_cards {
+    grid-area: player_cards;
+}
+
+.play_surface {
+    grid-area: play_surface;
+}
+
+
+
+/* THIRD LEVEL (CONTENT/SCORES) GRID ELEMENTS */
+table, th, td {
+    padding: 1px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
 
 
 
