@@ -1,0 +1,60 @@
+/* Basic page setup for spacing */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* TOP LEVEL GRID */
+.page_grid {
+    margin: 1ch;
+    width: 98vw;
+    height: 95vh;
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: 8% 92%;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "title title"
+    "sidebar content";
+}
+
+/* TOP LEVEL GRID ELEMENTS */
+.title {
+    grid-area: title;
+    background-color: #3db3ff;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 83%;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "players"
+    "chat";
+}
+
+.content {
+    grid-area: content;
+    background-color: bisque;
+}
+
+/* SECOND LEVEL (SIDEBAR) GRID ELEMENTS*/
+.chat {
+    grid-area: chat;
+    background-color: forestgreen;
+}
+
+.players {
+    grid-area: players;
+    background-color: #ff00c1;
+}
+
+/* THIRD LEVEL (CHAT) ELEMENTS */
+.player_chat {
+    overflow: scroll;
+}
+
