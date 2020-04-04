@@ -1,0 +1,148 @@
+/* Basic page setup for spacing */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+/* TOP LEVEL GRID */
+.page_grid {
+    margin: 1ch;
+    width: 98vw;
+    height: 95vh;
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: 8% 92%;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "title title"
+    "sidebar content";
+}
+
+
+
+
+/* TOP LEVEL GRID ELEMENTS */
+.title {
+    grid-area: title;
+    background-color: #3db3ff;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+    "title_title start_game"
+    "title_subtext start_game";
+}
+
+.sidebar {
+    grid-area: sidebar;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 83%;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "players"
+    "chat";
+}
+
+.content {
+    grid-area: content;
+    background-color: bisque;
+}
+
+
+
+
+/* SECOND LEVEL (TITLE) GRID ELEMENTS */
+.title_title {
+    padding: 5px;
+    grid-area: title_title;
+}
+
+.title_subtext {
+    padding: 5px;
+    grid-area: title_subtext;
+}
+
+.start_game {
+    justify-self: right;
+    align-self: center;
+    padding-right: 20px;
+    grid-area: start_game;
+}
+
+.start_game_btn {
+    width: 150px;
+    height: 50px;
+}
+
+
+
+
+/* SECOND LEVEL (SIDEBAR) GRID ELEMENTS*/
+.chat {
+    grid-area: chat;
+    background-color: forestgreen;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 84% 1fr;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "chat_title"
+    "player_chat"
+    "input_chat";
+}
+
+.players {
+    grid-area: players;
+    background-color: #ff00c1;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 20% 65%;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "player_title"
+    "player_list";
+}
+
+
+
+/* THIRD LEVEL (SIDEBAR/CHAT) GRID ELEMENTS */
+.chat_title {
+    padding: 5px;
+}
+
+.player_chat {
+    padding: 5px;
+    grid-area: player_chat;
+    overflow-y: auto;
+}
+
+.input_chat {
+    padding: 5px;
+    grid-area: input_chat;
+}
+
+
+
+
+/* THIRD LEVEL (SIDEBAR/PLAYERS) GRID ELEMENTS */
+.player_title {
+    padding: 5px;
+    grid-area: player_title;
+}
+
+.player_list {
+    padding: 5px;
+    list-style-type: none;
+    overflow-y: auto;
+    grid-area: player_list;
+}
