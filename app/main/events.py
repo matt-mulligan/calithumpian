@@ -12,7 +12,7 @@ HTML_TAG_PARAGRAPH = "p"
 PLAYERS = OrderedDict()
 
 
-# --- Events --------------------
+# --- INCOMING EVENTS --------------------
 @socketio.on("connect")
 def event_connect():
     print(f"client {request.sid} connected!")
@@ -32,7 +32,7 @@ def event_disconnect():
 
 @socketio.on("client_identify")
 def event_client_identify(data):
-    client = request.sid
+    sid = request.sid
     if data["player_name"] not in PLAYERS.keys():
 
         # Send Message to new Player
@@ -54,7 +54,7 @@ def event_client_identify(data):
         print("AFTER CALL")
 
         # Register Player
-        PLAYERS[data["player_name"]] = {"client": client}
+        PLAYERS[data["player_name"]] = {"sid": sid}
         print(f"Player '{data['player_name']}' has joined the game!")
 
         # Update Player List
@@ -78,10 +78,23 @@ def event_client_chat(data):
 @socketio.on("client_start_game")
 def event_start_game(data):
 
-    emit("update_score_row", {"row_index": 5, "player_scores": [1, 2, 3]}, broadcast=True)
+    # emit("update_score_row", {"row_index": 5, "player_scores": [1, 2, 3]}, broadcast=True)
 
-    game = Calithumpian(PLAYERS.keys())
+    game = Calithumpian(PLAYERS)
     game.play()
+
+
+# --- OUTGOING EVENTS --------------------
+def update_player_cards(player_name, player_sid, card_imgs):
+    """
+    emits to a specific client what there card images should be
+    :param player_name:
+    :param player_sid:
+    :param card_imgs:
+    :return:
+    """
+    print(f"SENDING CARDS TO PLAYER {player_name} as sid {player_sid}")
+    emit("update_player_cards", {"cards": card_imgs}, room=player_sid)
 
 
 # -- HELPERS --------------------
@@ -93,7 +106,7 @@ def get_player_name_from_sid(sid):
     """
 
     for name, info in PLAYERS.items():
-        if info["client"] == sid:
+        if info["sid"] == sid:
             return name
 
 
@@ -132,4 +145,18 @@ def update_players_list():
          },
          broadcast=True)
 
+
+def refresh_player_cards(players, hands):
+    """
+    Updates all of the players hands within the indivdual clients
+    :param players: dictionary in format of key=name value=client_sid
+    :param hands: List of card obejects within the players hand
+    :return:
+    """
+
+    for player_name, player_info in players.items():
+        card_imgs = []
+        for card in hands[player_name]:
+            card_imgs.append(card.img)
+        update_player_cards(player_name, player_info["sid"], card_imgs)
 

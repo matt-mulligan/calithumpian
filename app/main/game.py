@@ -9,7 +9,8 @@ from .deck import Deck
 from . import main
 from ..main import events
 
-ROUNDS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
+          "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
 
 
 class Calithumpian(object):
@@ -43,15 +44,16 @@ class Calithumpian(object):
         self.configure()
 
         for round in ROUNDS:
+            round_cards = int(round.split("-")[0])
             self.set_dealer()
             self.shuffle_deck()
-            self.deal_cards(round)
+            self.deal_cards(round_cards)
             trump_suite = self.set_trump_suite()
             bets = self.set_bets()
 
             # logic loop for each trick of the round
             play_order = self.order
-            for index in range(round):
+            for index in range(round_cards):
                 lead_suit, played_cards = self.play_cards(play_order)
                 trick_winner = self.determine_trick_winner(played_cards, lead_suit, trump_suite)
                 bets[trick_winner]["wins"] += 1
@@ -77,7 +79,7 @@ class Calithumpian(object):
         :return:
         """
 
-        for player, value in self.hands:
+        for player, value in self.hands.items():
             self.hands[player] = []
 
         self.deck.reset()
@@ -90,11 +92,15 @@ class Calithumpian(object):
         :return: None
         """
 
-        print("Dealing cards to players.")
+        events.message_player_chat("<p>SYSTEM: Dealing cards to players.")
 
         for card_index in range(hand_size):
             for player in self.order:
-                self.hands[player].append(self.deck.draw())
+                new_card = self.deck.draw()[0]
+                self.hands[player].append(new_card)
+                print(f"SERVER LOGGING: player {player} draw card {new_card.name}")
+
+        events.refresh_player_cards(self.players, self.hands)
 
     def set_trump_suite(self):
         """
@@ -239,13 +245,8 @@ class Calithumpian(object):
         :return:
         """
 
-        events.message_player_chat("SYSTEM: randomly determining the player order.")
-
-        player_list = self.players.keys()
-        random.shuffle(player_list)
-        self.order = deque(player_list)
-
-        print(f"Player order determined to be {self.order}")
+        self.order = deque(list(self.players.keys()))
+        events.message_player_chat(f"<p>SYSTEM: Player order determined to be {list(self.order)}</p>")
 
     def _setup_scores(self):
         """
@@ -305,20 +306,20 @@ class Calithumpian(object):
         :return: None
         """
 
-        print("Determining New dealer.")
+        events.message_player_chat("<p>SYSTEM: Determining New dealer.</P>")
 
         if self.dealer:
             self.order.rotate(-1)
             self.dealer = self.order[-1]
         else:
-            print("No dealer currently selected, High card for dealer position!")
+            events.message_player_chat("<p>SYSTEM: No dealer currently selected, High card for dealer position!</p>")
 
             self.shuffle_deck()
             values = []
             for player in self.order:
-                card = self.deck.draw()
+                card = self.deck.draw()[0]
                 values.append((player, card.value))
-                print(f"Player {player} draws card {card.name}")
+                events.message_player_chat(f"<p>SYSTEM: Player {player} draws card {card.name}")
 
             values.sort(reverse=True, key=lambda tup: tup[1])
             self.dealer = values[0][0]
@@ -327,4 +328,4 @@ class Calithumpian(object):
             reorder_steps = (self.order.index(self.dealer) + 1) * -1
             self.order.rotate(reorder_steps)
 
-        print(f"Dealer is {self.dealer}")
+        events.message_player_chat(f"SYSTEM: Dealer is {self.dealer}")
