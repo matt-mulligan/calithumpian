@@ -3,7 +3,8 @@ GAME LOGIC MODULE
 holds and runs all the calithumpian game logic.
 """
 import random
-from collections import deque
+from collections import deque, OrderedDict
+from time import sleep
 
 from .deck import Deck
 from . import main
@@ -27,48 +28,55 @@ class Calithumpian(object):
         DEALER: Name of the player who is currently the dealer
     """
 
-    def __init__(self, players):
-        self.players = players
+    def __init__(self):
+        self.players = None
         self.deck = Deck()
         self.scores = dict()
         self.hands = dict()
         self.order = None
         self.dealer = None
+        self.bets = dict()
+        self.current_trick_played_cards = OrderedDict()
+        self.current_trick_lead_suit = None
+        self.player_turn = None
 
-    def play(self):
+    def play(self, players):
         """
         main logic loop of game
         :return:
         """
 
-        self.configure()
+        self.configure(players)
 
-        for round in ROUNDS:
-            round_cards = int(round.split("-")[0])
+        for round_id in ROUNDS:
+            round_cards = int(round_id.split("-")[0])
+            events.update_round(round_cards)
+
             self.set_dealer()
             self.shuffle_deck()
             self.deal_cards(round_cards)
-            trump_suite = self.set_trump_suite()
-            bets = self.set_bets()
+            trump_suit = self.set_trump_suite()
+            self.set_bets(round_cards, trump_suit)
 
             # logic loop for each trick of the round
             play_order = self.order
             for index in range(round_cards):
-                lead_suit, played_cards = self.play_cards(play_order)
-                trick_winner = self.determine_trick_winner(played_cards, lead_suit, trump_suite)
-                bets[trick_winner]["wins"] += 1
+                self.play_cards(play_order)
+                trick_winner = self.determine_trick_winner(self.current_trick_played_cards, self.current_trick_lead_suit, trump_suit)
+                self.bets[trick_winner]["wins"] += 1
                 self.update_play_order(play_order, trick_winner)
 
-            self.update_scores(bets)
+            self.update_scores(self.bets)
 
         self.announce_winner()
 
-    def configure(self):
+    def configure(self, players):
         """
         inital setup required before the game starts
         :return:
         """
 
+        self.players = players
         self._determine_order()
         self._setup_scores()
         self._reset_hands()
@@ -92,6 +100,9 @@ class Calithumpian(object):
         :return: None
         """
 
+        # Add delay to make gameplay seem more natural
+        sleep(2)
+
         events.message_player_chat("<p>SYSTEM: Dealing cards to players.")
 
         for card_index in range(hand_size):
@@ -108,25 +119,34 @@ class Calithumpian(object):
         :return: Trump suit
         """
 
-        print("Selecting trump suit for the round")
-        card = self.deck.draw()
-        print(f"Trump suite this round is {card.suit}")
+        events.message_player_chat("<p>SYSTEM: Selecting trump suit for the round</p>")
+        card = self.deck.draw()[0]
+
+        events.message_player_chat(f"<p>Trump suite this round is {card.suit}</p>")
+        events.update_trump(card.suit)
         return card.suit
 
-    def set_bets(self):
+    def set_bets(self, round_num, trump):
         """
         all players set their bets for the round
         :return: dictionary of player names and bets.
         """
 
-        bets = {}
-        for player in self.order:
-            print(f"{player}, how many tricks would you like to bet this round?")
-            # ADD LOGIC BELOW TO SEND AN EMIT TO THE SPECIFIC PLAYER FOR A POPUP. HARDCODED AS 1
-            bets[player] = {"bet": 1, "wins": 0}
-            print(f"{player} bets {bets[player]} tricks this round!")
+        # Add delay to make gameplay seem more natural
+        sleep(2)
 
-        return bets
+        self.bets = {}
+        for player in self.order:
+            events.message_player_chat(f"<p>SYSTEM: {player}, how many tricks would you like to bet this round?")
+            events.get_player_bet(self.players[player]["sid"], round_num, trump)
+
+            # blocking waiting for the value to come back and be set
+            while player not in self.bets.keys():
+                print(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
+                sleep(5)
+
+            events.message_player_chat(f"<p>SYSTEM: {player} bets {self.bets[player]['bet']} tricks this round!")
+            events.update_bets_table(self.bets)
 
     def play_cards(self, play_order):
         """
@@ -135,33 +155,28 @@ class Calithumpian(object):
         :return:
         """
 
-        played_cards = {}
-        lead_suit = None
+        self.current_trick_lead_suit = None
+        self.current_trick_played_cards = OrderedDict()
+
         for player in play_order:
+            # Add delay to make gameplay seem more natural
+            sleep(2)
 
-            # Looping logic used to allow players to pick a card, check if legal move and loop if not
-            legal_move = False
+            self.player_turn = player
+            events.message_player_chat(f"<p>SYSTEM: player {player} please play a card!</p>")
+            events.play_card(player)
 
-            while not legal_move:
-                print(f"{player}, select a card to play for this trick.")
-                # ADD LOGIC BELOW TO SEND AN EMIT TO THE SPECIFIC PLAYER FOR A POPUP. HARDCODED AS FIRST CARD IN HAND
-                card = self.hands[player][0]
+            # check if player choice has come back and been validated yet.
+            while player not in self.current_trick_played_cards.keys():
+                # wait 2 seconds then reassess
+                sleep(2)
 
-                # If first player, then set the lead suit and continue
-                if not lead_suit:
-                    lead_suit = card.suit
-                    played_cards[player] = card
-                    legal_move = True
-                elif self._check_legal_move(card, self.hands[player], lead_suit):
-                    self.hands[player].remove(card)
-                    played_cards[player] = card
-                    legal_move = True
-                else:
-                    print(f"ILLEGAL MOVE by player {player}. "
-                          f"You have at least one card with the same suit as the lead card. "
-                          f"Please pick a card of suit {lead_suit}")
+            card = self.current_trick_played_cards[player]
+            self.hands[player].remove(card)
+            events.message_player_chat(f"<p>SYSTEM: player {player} played card {card.name}</p>")
+            events.refresh_player_cards(self.players, self.hands)
+            events.refresh_played_cards(self.current_trick_played_cards)
 
-        return lead_suit, played_cards
 
     def determine_trick_winner(self, played_cards, lead_suit, trump_suite):
         """
@@ -266,7 +281,7 @@ class Calithumpian(object):
         for player in self.order:
             self.hands[player] = []
 
-    def _check_legal_move(self, card, hand, lead_suit):
+    def check_legal_move(self, player, card_img_path):
         """
         checks that the card choosen by the player is a legal move.
         the card played by a player must be of the same suit as the lead suit if they have a card of that suit in their hand.
@@ -277,12 +292,20 @@ class Calithumpian(object):
         :return: boolean. True if legal, False if illegal
         """
 
-        if card.suit == lead_suit:
+        hand = self.hands[player]
+        card = self._resolve_card_from_img(hand, card_img_path)
+
+        if not self.current_trick_lead_suit:
+            self.current_trick_lead_suit = card.suit
+            self.current_trick_played_cards[player] = card
+            return True
+        elif card.suit == self.current_trick_lead_suit:
+            self.current_trick_played_cards[player] = card
             return True
         else:
             has_suit = False
             for hold_card in hand:
-                if hold_card.suit == lead_suit:
+                if hold_card.suit == self.current_trick_lead_suit:
                     has_suit = True
             return False if has_suit else True
 
@@ -305,6 +328,9 @@ class Calithumpian(object):
         determines the dealer for the next hand of play
         :return: None
         """
+
+        # Add delay to make gameplay seem more natural
+        sleep(2)
 
         events.message_player_chat("<p>SYSTEM: Determining New dealer.</P>")
 
@@ -329,3 +355,41 @@ class Calithumpian(object):
             self.order.rotate(reorder_steps)
 
         events.message_player_chat(f"SYSTEM: Dealer is {self.dealer}")
+        events.update_round_order(list(self.order))
+
+    def _resolve_card_from_img(self, hand, img_path):
+        """
+        resolves the card object from the hand based on img path
+
+        :param hand:
+        :param img_path:
+        :return:
+        """
+
+        for card in hand:
+            if card.img == img_path:
+                return card
+
+    def set_player_bet(self, player, bet_dict):
+        """
+        sets the players bets for a round. called from the event class after reciving a response from the player
+
+        :param player:
+        :param bet_dict:
+        :return:
+        """
+
+        self.bets[player] = bet_dict
+
+    def get_player_turn(self):
+        return self.player_turn
+
+    def add_card_to_played_cards(self, player, card_img):
+        """
+        This method will add the
+        :param player:
+        :param card_img:
+        :return:
+        """
+        card = self.deck.get_card_from_img_path(card_img)
+        self.current_trick_played_cards[player] = card

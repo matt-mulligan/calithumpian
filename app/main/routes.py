@@ -4,4 +4,4 @@ from . import main
 
 @main.route('/', methods=['GET', 'POST'])
 def load_client():
-    return render_template("game.html")
+    return render_template("client.html")

@@ -70,6 +70,16 @@ class Deck (object):
         self.cards_used = []
         self.cards_avaliable = self.cards_all
 
+    def get_card_from_img_path(self, img_path):
+        """
+        helper method that will return the correct card object based on the image path provided.
+        :param img_path:
+        :return:
+        """
+        for card in self.cards_all:
+            if card.img == img_path:
+                return card
+
 
 class Card (object):
     """

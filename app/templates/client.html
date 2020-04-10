@@ -10,7 +10,7 @@
         {# EXTERNAL JAVASCRIPT - Contains Event Code#}
         <script type="text/javascript" src="./static/js/events.js"></script>
 
-        <title>Calithumpian Lobby</title>
+        <title>Calithumpian Client</title>
     </head>
 
     <body>
@@ -18,7 +18,7 @@
 
             <div class="title">
                 <h1 class="title_title">Calithumpian: The game based on screwing people over!</h1>
-                <p class="title_subtext">Matt Mulligan 2020</p>
+                <p class="title_subtext">Version 1.0.0 - Matt Mulligan 2020</p>
                 <div class="start_game">
                     <button class="start_game_btn" type="button" onclick="event_start_game();">START GAME!</button>
                 </div>
@@ -48,8 +48,8 @@
 
                 <div class="scores">
 
-                    <h3>Scores:</h3>
-                    <table id="score_table">
+                    <h3 class="scores_title">Scores:</h3>
+                    <table class="scores_table" id="score_table">
                         <tr><th>Round</th></tr>
                         <tr><td>2</td></tr>
                         <tr><td>3</td></tr>
@@ -78,7 +78,36 @@
                     <div id="player_card_objs"></div>
                 </div>
 
-                <div class="play_surface"></div>
+                <div class="play_surface">
+
+                    <div class="play_info">
+                        <h3 class="play_info_title">Round Info:</h3>
+                        <table class="bet_table" id="bet_table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Round Bets</th>
+                                    <th>Tricks Won</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bet_table_body"></tbody>
+
+                        </table>
+                        <ul class="round_num" id="round_num" style="list-style-type: none"></ul>
+                        <ul class="round_trump" id="round_trump" style="list-style-type: none"></ul>
+                        <ul class="round_order" id="round_order" style="list-style-type: none"></ul>
+                    </div>
+
+                    <div class="play_action">
+                        <ul class="play_action_txt" id="play_action_txt" style="list-style-type: none"></ul>
+                    </div>
+
+                    <div class="played_cards">
+                        <div id="played_card_obj" class="played_card_obj"></div>
+                        <div id="played_cards_player" class="played_cards_player"></div>
+                    </div>
+
+                </div>
 
             </div>
 

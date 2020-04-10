@@ -54,7 +54,7 @@
     grid-area: content;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 33% 33% 40%;
+    grid-template-rows: 33% 33% 33%;
     grid-template-areas:
     "scores play_surface play_surface play_surface"
     "scores play_surface play_surface play_surface"
@@ -129,8 +129,17 @@
 
 /* SECOND LEVEL (CONTENT) GRID ELEMENTS */
 .scores {
-    padding: 5px;
     grid-area: scores;
+    padding: 10px;
+    align-self: start;
+    justify-self: start;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 10px;
+    grid-template-areas:
+    "scores_title"
+    "scores_table";
 }
 
 .player_cards {
@@ -139,7 +148,7 @@
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 5% 70%;
+    grid-template-rows: 5% 85%;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -149,16 +158,74 @@
 
 .play_surface {
     grid-area: play_surface;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "play_info play_action"
+    "play_info played_cards";
+}
+
+
+
+/* THIRD LEVEL (CONTENT/PLAY_SURFACE) GRID ELEMENTS */
+.play_info {
+    padding-top: 10px;
+    grid-area: play_info;
+    align-self: start;
+    justify-self: start;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 20px;
+    grid-template-areas:
+    "play_info_title"
+    "bet_table"
+    "round_num"
+    "round_trump"
+    "round_order";
+}
+
+.play_action {
+    grid-area: play_action;
+}
+
+.play_action_txt {
+    padding: 20px;
+    align-self: center;
+    justify-self: start;
+}
+
+.played_cards {
+    grid-area: played_card;
+    align-self: end;
+    justify-self: end;
 }
 
 
 
 /* THIRD LEVEL (CONTENT/SCORES) GRID ELEMENTS */
-table, th, td {
-    padding: 1px;
+.scores_title {
+    grid-area: scores_title;
+}
+
+.scores_table {
+    grid-area: scores_table;
+    align-self: start;
+    justify-self: start;
+
+}
+
+table.scores_table, table.scores_table th, table.scores_table td {
     border: 1px solid black;
-    border-collapse: collapse;
     text-align: center;
+    font-size: 1.4vh;
+}
+
+table.scores_table th, table.scores_table td {
+    padding: 2px;
 }
 
 
@@ -167,10 +234,14 @@ table, th, td {
 /* THIRD LEVEL (CONTENT/PLAYER_CARDS) GRID ELEMENTS */
 .player_card_title {
     grid-area: player_card_title;
+    align-self: end;
+    justify-self: end;
 }
 
 .player_card_objs {
     grid-area: player_card_objs;
+    align-self: end;
+    justify-self: end;
 }
 
 img {
@@ -211,4 +282,40 @@ img {
     list-style-type: none;
     overflow-y: auto;
     grid-area: player_list;
+}
+
+
+
+/* FOURTH LEVEL (CONTENT/PLAY_SURFACE/PLAY_INFO) GRID ELEMENTS */
+.play_info_title {
+    grid-area: play_info_title;
+    align-self: start;
+    justify-self: start;
+}
+
+.bet_table {
+    grid-area: bet_table;
+    align-self: start;
+    justify-self: start;
+}
+
+table.bet_table, table.bet_table td, table.bet_table th {
+    border: 1px solid black;
+    text-align: center;
+}
+
+table.bet_table td, table.bet_table th {
+    padding: 3px;
+}
+
+.round_num {
+    grid-area: round_num;
+}
+
+.round_trump {
+    grid-area: round_trump;
+}
+
+.round_order {
+    grid-area: round_order;
 }

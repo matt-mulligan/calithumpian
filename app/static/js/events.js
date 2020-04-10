@@ -21,6 +21,17 @@ socket.on("update_score_row", function (data) { update_score_row(data) });
 // INCOMING EVENT - update_player_cards - updates the specific players held card
 socket.on("update_player_cards", function (data) { update_player_cards(data) });
 
+// INCOMING EVENT - BET - player is asked to bet tricks on this round
+socket.on("bet", function (data) { bet_response(data) });
+
+//INCOMING EVENT - UPDATE_BETS_TABLE - updates the bets table for the client
+socket.on("update_bets_table", function (data) { update_bets_table(data) });
+
+//INCOMING EVENT - PLAY_CARD - server telling player its there turn
+socket.on("play_card", function (data) { play_card(data) });
+
+//INCOMING EVENT: UPDATE PLAYED CARDS - updates the played card on the client views
+socket.on("update_played_cards", function (data) { update_played_cards(data) });
 
 
 
@@ -32,10 +43,10 @@ function identify_player(data) {
     $('#player_chat').append(data.message);
 
     if (data.action === "identify_client") {
-        var playerName = prompt("Please enter your name", "Derpy");
+        let playerName = prompt("Please enter your name");
         socket.emit("client_identify", {"player_name": playerName})
     } else if (data.action === "identify_duplicate") {
-        var playerName = prompt("Player name already in use, Please enter your name:", "Harry Potter");
+        let playerName = prompt("Player name already in use, Please enter your name:");
         socket.emit("client_identify", {"player_name": playerName})
     }
 }
@@ -72,7 +83,68 @@ function update_score_row(data) {
 }
 
 
+// INCOMING EVENT FUNCTION - BET_REPONSE - player needs to be for the round
+function bet_response(data) {
+    let bet_val = prompt(data.message);
+    socket.emit("bet_response", {"bet": bet_val})
+}
 
+
+// INCOMING EVENT FUNCTION - UPDATE_BETS_TABLE - drop the tbody tag from the table and replace it with a new one
+// with new values
+function update_bets_table(data) {
+    let old_tbody = document.getElementById("bet_table_body");
+    let new_tbody = document.createElement("tbody");
+    new_tbody.id = "bet_table_body";
+
+    for (let index=0; index < data.length; index++) {
+        console.log(data[index]);
+        let row = document.createElement("tr");
+        let player_td = document.createElement("td");
+        player_td.innerHTML = data[index].player;
+        let bet_td = document.createElement("td");
+        bet_td.innerHTML = data[index].bet;
+        let wins_td = document.createElement("td");
+        wins_td.innerHTML = data[index].wins;
+
+        row.appendChild(player_td);
+        row.appendChild(bet_td);
+        row.appendChild(wins_td);
+
+        new_tbody.appendChild(row);
+    }
+
+    old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+
+}
+
+// INCOME EVENT FUNCTION - PLAY CARD - user informed from server to play card
+function play_card(data) { alert(data.message) }
+
+// INCOMING EVENT FUNCTION - UPDATE PLAYED CARDS - cleans out then updates the played cards view object
+function update_played_cards(data) {
+    let old_cards = document.getElementById("played_card_obj");
+    let new_cards = document.createElement("div");
+    new_cards.id = "played_card_obj";
+
+    let old_players = document.getElementById("played_cards_player");
+    let new_players = document.createElement("div");
+    new_players.id = "played_cards_player";
+
+    for (let index=0; index < data.length; index++) {
+        let player = "<p>" + data[index].player + "</p>";
+        let card_img = data[index].card_img;
+
+        let img_obj = document.createElement("img");
+        img_obj.src = card_img;
+
+        new_cards.appendChild(img_obj);
+        new_players.appendChild(player)
+    }
+
+    old_cards.parentNode.replaceChild(new_cards, old_cards);
+    old_players.parentNode.replaceChild(new_players, old_players);
+}
 
 
 
@@ -87,6 +159,12 @@ function event_client_chat() {
 // OUTGOING EVENT - START_GAME - a player starting the game
 function event_start_game() {
     socket.emit("client_start_game", {});
+}
+
+// OUTGOING EVENT - PLAY CARD RESPONSE - the client sending the card to the server to be played
+function play_card_response(img_path) {
+    console.log("INSIDE PLAY CARD RESPONSE WITH " + img_path);
+    socket.emit("play_card_response", {"img_path": img_path});
 }
 
 
@@ -113,13 +191,12 @@ function update_element(data) {
 function update_player_cards(data) {
     // clear the contents of the player cards fiv
     document.getElementById("player_card_objs").innerHTML = "";
-    console.log("DATA RECIEVED = " + data);
-    console.log("CARDS RECIEVED = " + data.cards);
 
     // for each card path passed in, create an image tag and insert into the dom element
     for (let index = 0; index < data.cards.length; index++) {
         let card_img = document.createElement("img");
         card_img.src = data.cards[index];
+        card_img.addEventListener("click", function(){ play_card_response(data.cards[index]); });
         console.log("IMAGE PATH = " + card_img.src);
         document.getElementById("player_card_objs").appendChild(card_img)
     }
