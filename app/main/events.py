@@ -196,6 +196,22 @@ def update_players_list():
          broadcast=True)
 
 
+def update_action(action_message):
+    """
+    this method will trigger an update of the players list
+    :return:
+    """
+
+    emit("update_element",
+         {
+             "target": "play_action_txt",
+             "target_type": "list",
+             "action": "overwrite",
+             "message": [action_message]
+         },
+         broadcast=True)
+
+
 def refresh_player_cards(players, hands):
     """
     Updates all of the players hands within the indivdual clients

@@ -158,9 +158,11 @@
 
 .play_surface {
     grid-area: play_surface;
+    padding-top: 1ch;
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 20vw 20vw 20vw;
+    grid-template-rows: 25vh 25vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -172,14 +174,14 @@
 
 /* THIRD LEVEL (CONTENT/PLAY_SURFACE) GRID ELEMENTS */
 .play_info {
-    padding-top: 10px;
+    padding-top: 1ch;
     grid-area: play_info;
     align-self: start;
     justify-self: start;
 
     display: grid;
-    grid-template-columns: 1fr;
-    grid-row-gap: 20px;
+    grid-template-columns: 18vw;
+    grid-row-gap: 1ch;
     grid-template-areas:
     "play_info_title"
     "bet_table"
@@ -189,19 +191,43 @@
 }
 
 .play_action {
+    padding: 1ch;
     grid-area: play_action;
-}
-
-.play_action_txt {
-    padding: 20px;
-    align-self: center;
+    background: lightskyblue;
+    border: black;
+    border-style: groove;
+    height: 15vh;
+    width: 35vw;
+    align-self: start;
     justify-self: start;
 }
 
+.play_action_txt {
+    align-self: center;
+    text-align: center;
+    font-size: 2vw;
+}
+
 .played_cards {
-    grid-area: played_card;
-    align-self: end;
-    justify-self: end;
+    grid-area: played_cards;
+
+    display: grid;
+    grid-template-columns: 25vw;
+    grid-template-rows: 27vh 2vh;
+    grid-row-gap: 1ch;
+    grid-column-gap: 1ch;
+    grid-template-areas:
+    "played_card_obj"
+    "played_cards_player";
+
+}
+
+.played_card_obj {
+    grid-area: played_card_obj;
+}
+
+.played_cards_player {
+    grid-area: played_cards_player;
 }
 
 
