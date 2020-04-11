@@ -123,6 +123,8 @@ function play_card(data) { alert(data.message) }
 
 // INCOMING EVENT FUNCTION - UPDATE PLAYED CARDS - cleans out then updates the played cards view object
 function update_played_cards(data) {
+    console.log("BEGIN UPDATE PLAYED CARD")
+    console.log("DATA OBJECT FIRST INDEX = " + data[0].player + " " + data[0].card_img)
     let old_cards = document.getElementById("played_card_obj");
     let new_cards = document.createElement("div");
     new_cards.id = "played_card_obj";
@@ -132,7 +134,8 @@ function update_played_cards(data) {
     new_players.id = "played_cards_player";
 
     for (let index=0; index < data.length; index++) {
-        let player = "<p>" + data[index].player + "</p>";
+        let player = document.createElement("p");
+        player.innerText = data[index].player
         let card_img = data[index].card_img;
 
         let img_obj = document.createElement("img");

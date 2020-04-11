@@ -11,11 +11,9 @@
 /* TOP LEVEL GRID */
 .page_grid {
     margin: 1ch;
-    width: 98vw;
-    height: 95vh;
     display: grid;
-    grid-template-columns: 20% 1fr;
-    grid-template-rows: 8% 90%;
+    grid-template-columns: 20vw 78vw;
+    grid-template-rows: 7vh 87vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -32,7 +30,7 @@
     background-color: #4b9fff;
 
     display: grid;
-    grid-template-columns: 1fr 20%;
+    grid-template-columns: 80% 20%;
     grid-template-areas:
     "title_title start_game"
     "title_subtext start_game";
@@ -42,7 +40,7 @@
     grid-area: sidebar;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 15% 83.8%;
+    grid-template-rows: 15vh 71vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -53,8 +51,8 @@
 .content {
     grid-area: content;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 33% 33% 33%;
+    grid-template-columns: 18vw 15vw 25vw 20vw;
+    grid-template-rows: 27vh 27vh 35vh;
     grid-template-areas:
     "scores play_surface play_surface play_surface"
     "scores play_surface play_surface play_surface"
@@ -68,27 +66,29 @@
 
 /* SECOND LEVEL (TITLE) GRID ELEMENTS */
 .title_title {
-    padding: 5px;
+    padding: 0.1vw;
     grid-area: title_title;
+    font-size: 1.4vw;
 }
 
 .title_subtext {
-    padding: 5px;
+    padding: 0.1vw;
     grid-area: title_subtext;
+    font-size: 0.8vw;
 }
 
 .start_game {
     justify-self: right;
     align-self: center;
-    padding-right: 20px;
+
+    padding-right: 1vw;
     grid-area: start_game;
 }
 
 .start_game_btn {
-    width: 100%;
-    height: 80%;
-    min-height: 35px;
-    min-width: 110px;
+    width: 6vw;
+    height: 3vh;
+    font-size: 0.8vw;
 }
 
 
@@ -101,7 +101,7 @@
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 84% 1fr;
+    grid-template-rows: 2vh 63vh 3vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -116,7 +116,7 @@
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 20% 65%;
+    grid-template-rows: 2vh 11vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -130,25 +130,25 @@
 /* SECOND LEVEL (CONTENT) GRID ELEMENTS */
 .scores {
     grid-area: scores;
-    padding: 10px;
+    padding: 1ch;
     align-self: start;
     justify-self: start;
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-row-gap: 10px;
+    grid-row-gap: 1ch;
     grid-template-areas:
     "scores_title"
     "scores_table";
 }
 
 .player_cards {
-    padding: 5px;
+    padding: 1ch;
     grid-area: player_cards;
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 5% 85%;
+    grid-template-rows: 2vh 28vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
@@ -160,12 +160,12 @@
     grid-area: play_surface;
 
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
-    "play_info play_action"
-    "play_info played_cards";
+    "play_info play_action play_action"
+    "play_info played_cards played_cards";
 }
 
 
@@ -209,6 +209,7 @@
 /* THIRD LEVEL (CONTENT/SCORES) GRID ELEMENTS */
 .scores_title {
     grid-area: scores_title;
+    font-size: 1.3vw;
 }
 
 .scores_table {
@@ -221,11 +222,12 @@
 table.scores_table, table.scores_table th, table.scores_table td {
     border: 1px solid black;
     text-align: center;
-    font-size: 1.4vh;
+    font-size: 1.65vh;
 }
 
-table.scores_table th, table.scores_table td {
-    padding: 2px;
+table.scores_table {
+    height: 20vh;
+    width: 15vw;
 }
 
 
@@ -254,18 +256,30 @@ img {
 
 /* THIRD LEVEL (SIDEBAR/CHAT) GRID ELEMENTS */
 .chat_title {
-    padding: 5px;
+    padding: 0.5vh 0.5vh 1vh;
+    font-size: 1.3vw;
 }
 
 .player_chat {
-    padding: 5px;
+    padding: 0.5vh;
+    font-size: 0.85vw;
     grid-area: player_chat;
     overflow-y: auto;
 }
 
 .input_chat {
-    padding: 5px;
+    padding: 0.5vh;
     grid-area: input_chat;
+}
+
+.chat_text_box {
+    width: 15vw;
+    height: 2vh;
+}
+
+.chat_button {
+    width: 3.5vw;
+    height: 2.2vh;
 }
 
 
@@ -273,12 +287,16 @@ img {
 
 /* THIRD LEVEL (SIDEBAR/PLAYERS) GRID ELEMENTS */
 .player_title {
-    padding: 5px;
+    padding-top: 0.1vh;
+    padding-left: 0.1vw;
+    font-size: 1.3vw;
     grid-area: player_title;
 }
 
 .player_list {
-    padding: 5px;
+    padding-top: 0.5vh;
+    padding-left: 0.1vw;
+    font-size: 1vw;
     list-style-type: none;
     overflow-y: auto;
     grid-area: player_list;

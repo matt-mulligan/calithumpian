@@ -290,4 +290,4 @@ def refresh_played_cards(played_cards):
     card_list = []
     for player, card in played_cards.items():
         card_list.append({"player": player, "card_img": card.img})
-    emit("update_played_cards", {"cards": card_list}, broadcast=True)
+    emit("update_played_cards", card_list, broadcast=True)
