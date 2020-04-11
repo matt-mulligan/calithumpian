@@ -307,3 +307,14 @@ def refresh_played_cards(played_cards):
     for player, card in played_cards.items():
         card_list.append({"player": player, "card_img": card.img})
     emit("update_played_cards", card_list, broadcast=True)
+
+
+def update_score_table(index, scores):
+    """
+    updates the index specified in the score table with the scores provided
+    :param index:
+    :param scores:
+    :return:
+    """
+
+    emit("update_score_row", {"row_index": index, "player_scores": scores})

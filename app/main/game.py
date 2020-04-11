@@ -64,9 +64,10 @@ class Calithumpian(object):
                 self.play_cards(play_order)
                 trick_winner = self.determine_trick_winner(self.current_trick_played_cards, self.current_trick_lead_suit, trump_suit)
                 self.bets[trick_winner]["wins"] += 1
+                events.update_bets_table(self.bets)
                 self.update_play_order(play_order, trick_winner)
 
-            self.update_scores(self.bets)
+            self.update_scores(self.bets, round_id)
 
         self.announce_winner()
 
@@ -104,6 +105,7 @@ class Calithumpian(object):
         sleep(2)
 
         events.message_player_chat("<p>SYSTEM: Dealing cards to players.")
+        events.update_action("Dealing cards to players")
 
         for card_index in range(hand_size):
             for player in self.order:
@@ -120,9 +122,11 @@ class Calithumpian(object):
         """
 
         events.message_player_chat("<p>SYSTEM: Selecting trump suit for the round</p>")
+        events.update_action("Selecting the trump suit for this round")
         card = self.deck.draw()[0]
 
-        events.message_player_chat(f"<p>Trump suite this round is {card.suit}</p>")
+        events.message_player_chat(f"<p>SYSTEM: Trump suite this round is {card.suit}</p>")
+        events.update_action(f"Trump suit for this round is {card.suit}")
         events.update_trump(card.suit)
         return card.suit
 
@@ -138,14 +142,16 @@ class Calithumpian(object):
         self.bets = {}
         for player in self.order:
             events.message_player_chat(f"<p>SYSTEM: {player}, how many tricks would you like to bet this round?")
+            events.update_action(f"{player}, please enter your bet")
             events.get_player_bet(self.players[player]["sid"], round_num, trump)
 
             # blocking waiting for the value to come back and be set
             while player not in self.bets.keys():
                 print(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
-                sleep(5)
+                sleep(2)
 
             events.message_player_chat(f"<p>SYSTEM: {player} bets {self.bets[player]['bet']} tricks this round!")
+            events.update_action(f"{player} bets {self.bets[player]['bet']} tricks this round!")
             events.update_bets_table(self.bets)
 
     def play_cards(self, play_order):
@@ -160,10 +166,11 @@ class Calithumpian(object):
 
         for player in play_order:
             # Add delay to make gameplay seem more natural
-            sleep(2)
+            sleep(1)
 
             self.player_turn = player
             events.message_player_chat(f"<p>SYSTEM: player {player} please play a card!</p>")
+            events.update_action(f"{player}, please play a card")
             events.play_card(player)
 
             # check if player choice has come back and been validated yet.
@@ -174,9 +181,9 @@ class Calithumpian(object):
             card = self.current_trick_played_cards[player]
             self.hands[player].remove(card)
             events.message_player_chat(f"<p>SYSTEM: player {player} played card {card.name}</p>")
+            events.update_action(f"{player} has played {card.name}")
             events.refresh_player_cards(self.players, self.hands)
             events.refresh_played_cards(self.current_trick_played_cards)
-
 
     def determine_trick_winner(self, played_cards, lead_suit, trump_suite):
         """
@@ -191,6 +198,8 @@ class Calithumpian(object):
         :return: name of the winner
         """
 
+        events.update_action(f"Determining who won the trick")
+        events.message_player_chat("<p>SYSTEM: Determining who won the the trick")
         trump_cards = {}
         lead_cards = {}
         for player, card in played_cards.items():
@@ -204,7 +213,9 @@ class Calithumpian(object):
         else:
             winner = self._get_highest_card(lead_cards)
 
-        print("Winner of the trick is {winner} with {played_cards[winner].name}")
+        events.update_action(f"Winner of the trick is {winner} with {played_cards[winner].name}")
+        events.message_player_chat(f"<p>SYSTEM: Winner of the trick is {winner} with {played_cards[winner].name}")
+        print(f"Winner of the trick is {winner} with {played_cards[winner].name}")
         return winner
 
     def update_play_order(self, play_order, trick_winner):
@@ -219,7 +230,7 @@ class Calithumpian(object):
         reorder_steps = play_order.index(trick_winner) * -1
         play_order.rotate(reorder_steps)
 
-    def update_scores(self, bets):
+    def update_scores(self, bets, round_id):
         """
         updates the scores for each player
         :param bets: dictionary of key=player value=dictionary holding the bet and wins
@@ -227,15 +238,57 @@ class Calithumpian(object):
         """
 
         print("Updating player scores.")
+        events.message_player_chat(f"<p>SYSTEM: Updating the scores!</p>")
+        events.update_action(f"Updating the scores!")
 
         for player, bet_vals in bets.items():
+            sleep(1)
             if bet_vals["bet"] == bet_vals["wins"]:
                 score = 10 + bet_vals["bet"]
             else:
                 score = 0
             self.scores[player].append(score)
 
+            events.message_player_chat(f"<p>SYSTEM: player {player} scored {score} points that round</p>")
+            events.update_action(f"player {player} scored {score} points that round")
             print(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
+
+        self._update_score_table_rows(self.scores, self.players, round_id)
+
+    def _update_score_table_rows(self, scores, players, round_id):
+        """
+        this method will update the score table for the last round as well as the totals
+        :param scores:
+        :param players:
+        :param round_id:
+        :return:
+        """
+
+        total_index = 19
+        round_index = self._get_round_index(round_id)
+
+        total_scores = []
+        round_scores = []
+
+        for player in players:
+            total_scores.append(sum(scores[player]))
+            round_scores.append(scores[player][-1])
+
+        events.update_score_table(total_index, total_scores)
+        events.update_score_table(round_index, round_scores)
+
+    def _get_round_index(self, round_id):
+        """
+        gets the row index of the score table for the specific round
+        :param round_id:
+        :return:
+        """
+
+        end = round_id.split("-")[1]
+        if end == "ASC":
+            return int(round_id.split("-")[0]) - 1
+        else:
+            return 20 - int(round_id.split("-")[0])
 
     def announce_winner(self):
         """
@@ -260,6 +313,7 @@ class Calithumpian(object):
         :return:
         """
 
+        events.update_action("Determining Player Order")
         self.order = deque(list(self.players.keys()))
         events.message_player_chat(f"<p>SYSTEM: Player order determined to be {list(self.order)}</p>")
 
@@ -333,12 +387,14 @@ class Calithumpian(object):
         sleep(2)
 
         events.message_player_chat("<p>SYSTEM: Determining New dealer.</P>")
+        events.update_action("Selecting Dealer")
 
         if self.dealer:
             self.order.rotate(-1)
             self.dealer = self.order[-1]
         else:
             events.message_player_chat("<p>SYSTEM: No dealer currently selected, High card for dealer position!</p>")
+            events.update_action("No dealer currently selected, high card for dealer position")
 
             self.shuffle_deck()
             values = []
@@ -346,6 +402,7 @@ class Calithumpian(object):
                 card = self.deck.draw()[0]
                 values.append((player, card.value))
                 events.message_player_chat(f"<p>SYSTEM: Player {player} draws card {card.name}")
+                events.update_action(f"{player} draws {card.name}")
 
             values.sort(reverse=True, key=lambda tup: tup[1])
             self.dealer = values[0][0]
@@ -355,6 +412,7 @@ class Calithumpian(object):
             self.order.rotate(reorder_steps)
 
         events.message_player_chat(f"SYSTEM: Dealer is {self.dealer}")
+        events.update_action(f"Dealer is {self.dealer}")
         events.update_round_order(list(self.order))
 
     def _resolve_card_from_img(self, hand, img_path):
