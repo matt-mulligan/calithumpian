@@ -317,4 +317,4 @@ def update_score_table(index, scores):
     :return:
     """
 
-    emit("update_score_row", {"row_index": index, "player_scores": scores})
+    emit("update_score_row", {"row_index": index, "player_scores": scores}, broadcast=True)
