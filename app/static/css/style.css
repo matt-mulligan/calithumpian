@@ -213,10 +213,11 @@
 
     display: grid;
     grid-template-columns: 25vw;
-    grid-template-rows: 27vh 2vh;
+    grid-template-rows: 2vh 24vh 1vh;
     grid-row-gap: 1ch;
     grid-column-gap: 1ch;
     grid-template-areas:
+    "played_card_title"
     "played_card_obj"
     "played_cards_player";
 
@@ -230,7 +231,10 @@
     grid-area: played_cards_player;
 }
 
-
+.played_card_title {
+    grid-area: played_card_title;
+    font-size: 1.1vw;
+}
 
 /* THIRD LEVEL (CONTENT/SCORES) GRID ELEMENTS */
 .scores_title {
