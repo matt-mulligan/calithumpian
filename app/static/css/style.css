@@ -193,7 +193,7 @@
 .play_action {
     padding: 1ch;
     grid-area: play_action;
-    background: lightskyblue;
+    background-color: #87c77d;
     border: black;
     border-style: groove;
     height: 15vh;
