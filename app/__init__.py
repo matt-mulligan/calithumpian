@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_socketio import SocketIO
 
-socketio = SocketIO()
+socketio = SocketIO(ping_timeout=600, ping_interval=300, engineio_logger=True)
 
 
 def create_app(debug=False):

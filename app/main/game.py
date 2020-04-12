@@ -10,8 +10,10 @@ from .deck import Deck
 from . import main
 from ..main import events
 
-ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
-          "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
+# ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
+#           "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
+
+ROUNDS = ["2-ASC", "3-ASC", "4-ASC"]
 
 
 class Calithumpian(object):
@@ -66,6 +68,7 @@ class Calithumpian(object):
                 self.bets[trick_winner]["wins"] += 1
                 events.update_bets_table(self.bets)
                 self.update_play_order(play_order, trick_winner)
+                events.refresh_played_cards({})
 
             self.update_scores(self.bets, round_id)
 
@@ -242,7 +245,6 @@ class Calithumpian(object):
         events.update_action(f"Updating the scores!")
 
         for player, bet_vals in bets.items():
-            sleep(1)
             if bet_vals["bet"] == bet_vals["wins"]:
                 score = 10 + bet_vals["bet"]
             else:
@@ -252,6 +254,7 @@ class Calithumpian(object):
             events.message_player_chat(f"<p>SYSTEM: player {player} scored {score} points that round</p>")
             events.update_action(f"player {player} scored {score} points that round")
             print(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
+            sleep(1)
 
         self._update_score_table_rows(self.scores, self.players, round_id)
 
@@ -296,6 +299,8 @@ class Calithumpian(object):
         :return:
         """
 
+        events.update_action("AND THE FINAL SCORES ARE...")
+        events.message_player_chat("<p>AND THE FINAL SCORES ARE...</p>")
         final_scores = []
         for player, round_scores in self.scores.items():
             final_scores.append((player, sum(round_scores)))
@@ -303,8 +308,13 @@ class Calithumpian(object):
 
         print("AND THE FINAL SCORES ARE:")
         for score in final_scores:
+            sleep(1)
+            events.update_action(f"{score[0]} with a score of {score[1]}")
+            events.message_player_chat(f"<p>{score[0]} with a score of {score[1]}</p>")
             print(f"{score[0]} with a score of {score[1]}")
 
+        sleep(1)
+        events.update_action(f"Thanks for playing! press start game to play again")
         print("THANKS FOR PLAYING!!!")
 
     def _determine_order(self):

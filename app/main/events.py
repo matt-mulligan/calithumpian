@@ -17,7 +17,8 @@ PLAYERS = OrderedDict()
 # --- INCOMING EVENTS --------------------
 @socketio.on("connect")
 def event_connect():
-    print(f"client {request.sid} connected!")
+    client_address = f"{request.remote_addr}:{request.environ['REMOTE_PORT']}"
+    print(f"client {request.sid} connected from {client_address}")
     message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH, "SYSTEM: Please provide a player name")
     emit('identify', {"action": "identify_client", "message": message})
 
