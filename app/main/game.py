@@ -10,10 +10,10 @@ from .deck import Deck
 from . import main
 from ..main import events
 
-# ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
-#           "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
+ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
+          "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
 
-ROUNDS = ["2-ASC", "3-ASC", "4-ASC"]
+# ROUNDS = ["2-ASC", "3-ASC", "4-ASC"]
 
 
 class Calithumpian(object):
@@ -174,7 +174,7 @@ class Calithumpian(object):
             self.player_turn = player
             events.message_player_chat(f"<p>SYSTEM: player {player} please play a card!</p>")
             events.update_action(f"{player}, please play a card")
-            events.play_card(player)
+            # events.play_card(player)
 
             # check if player choice has come back and been validated yet.
             while player not in self.current_trick_played_cards.keys():
