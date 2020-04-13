@@ -19,8 +19,30 @@ PLAYERS = OrderedDict()
 def event_connect():
     client_address = f"{request.remote_addr}:{request.environ['REMOTE_PORT']}"
     print(f"client {request.sid} connected from {client_address}")
+
+
+@socketio.on("join_game")
+def event_join_game():
     message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH, "SYSTEM: Please provide a player name")
-    emit('identify', {"action": "identify_client", "message": message})
+    emit('identify', {"action": "identify_client", "message": message}, room=request.sid)
+
+
+@socketio.on("reset_game")
+def event_reset_game():
+    print("INSIDE RESET!")
+    for player in PLAYERS.keys():
+        print(f"PLAYER IS {player}")
+        del PLAYERS[player]
+    emit("reset_all_assets", broadcast=True)
+
+    # # stop current iteration of game
+    print("Killing game loop")
+    GAME.kill_game()
+
+    # remove all players from player list
+    update_players_list()
+
+    update_action(["Welcome to calithumpian", "please click 'join game' button"])
 
 
 @socketio.on("disconnect")
@@ -80,7 +102,6 @@ def event_client_chat(data):
 
 @socketio.on("client_start_game")
 def event_start_game(data):
-
     GAME.play(PLAYERS)
 
 
@@ -203,12 +224,15 @@ def update_action(action_message):
     :return:
     """
 
+    if not isinstance(action_message, list):
+        action_message = [action_message]
+
     emit("update_element",
          {
              "target": "play_action_txt",
              "target_type": "list",
              "action": "overwrite",
-             "message": [action_message]
+             "message": action_message
          },
          broadcast=True)
 

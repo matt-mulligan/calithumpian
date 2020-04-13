@@ -32,8 +32,8 @@
     display: grid;
     grid-template-columns: 80% 20%;
     grid-template-areas:
-    "title_title start_game"
-    "title_subtext start_game";
+    "title_title game_controls"
+    "title_subtext game_controls";
 }
 
 .sidebar {
@@ -77,15 +77,27 @@
     font-size: 0.8vw;
 }
 
-.start_game {
+.game_controls {
     justify-self: right;
     align-self: center;
 
     padding-right: 1vw;
-    grid-area: start_game;
+    grid-area: game_controls;
 }
 
 .start_game_btn {
+    width: 6vw;
+    height: 3vh;
+    font-size: 0.8vw;
+}
+
+.join_game_btn {
+    width: 6vw;
+    height: 3vh;
+    font-size: 0.8vw;
+}
+
+.reset_game_btn {
     width: 6vw;
     height: 3vh;
     font-size: 0.8vw;

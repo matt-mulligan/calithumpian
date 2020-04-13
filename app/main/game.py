@@ -7,7 +7,6 @@ from collections import deque, OrderedDict
 from time import sleep
 
 from .deck import Deck
-from . import main
 from ..main import events
 
 ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC", "10-ASC",
@@ -31,6 +30,7 @@ class Calithumpian(object):
     """
 
     def __init__(self):
+        self._kill = False
         self.players = None
         self.deck = Deck()
         self.scores = dict()
@@ -51,6 +51,9 @@ class Calithumpian(object):
         self.configure(players)
 
         for round_id in ROUNDS:
+            if self._kill:
+                print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                return
             round_cards = int(round_id.split("-")[0])
             events.update_round(round_cards)
 
@@ -64,6 +67,9 @@ class Calithumpian(object):
             play_order = self.order
             for index in range(round_cards):
                 self.play_cards(play_order)
+                if self._kill:
+                    print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                    return
                 trick_winner = self.determine_trick_winner(self.current_trick_played_cards, self.current_trick_lead_suit, trump_suit)
                 self.bets[trick_winner]["wins"] += 1
                 events.update_bets_table(self.bets)
@@ -74,12 +80,21 @@ class Calithumpian(object):
 
         self.announce_winner()
 
+    def kill_game(self):
+        """
+        sets the internal kill signal to true so the game logic loop will stop
+        :return:
+        """
+
+        self._kill = True
+
     def configure(self, players):
         """
         inital setup required before the game starts
         :return:
         """
 
+        self._kill = False
         self.players = players
         self._determine_order()
         self._setup_scores()
@@ -150,6 +165,9 @@ class Calithumpian(object):
 
             # blocking waiting for the value to come back and be set
             while player not in self.bets.keys():
+                if self._kill:
+                    print("KILL SIGNAL RECIEVED FOR GAME. ENDING PLAY")
+                    return
                 print(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
                 sleep(2)
 
@@ -178,6 +196,10 @@ class Calithumpian(object):
 
             # check if player choice has come back and been validated yet.
             while player not in self.current_trick_played_cards.keys():
+                if self._kill:
+                    print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                    return
+                print(f"WAITING FOR PLAYER {player} TO PICK A CARD")
                 # wait 2 seconds then reassess
                 sleep(2)
 
@@ -202,6 +224,7 @@ class Calithumpian(object):
         """
 
         events.update_action(f"Determining who won the trick")
+        sleep(2)
         events.message_player_chat("<p>SYSTEM: Determining who won the the trick")
         trump_cards = {}
         lead_cards = {}
@@ -219,6 +242,7 @@ class Calithumpian(object):
         events.update_action(f"Winner of the trick is {winner} with {played_cards[winner].name}")
         events.message_player_chat(f"<p>SYSTEM: Winner of the trick is {winner} with {played_cards[winner].name}")
         print(f"Winner of the trick is {winner} with {played_cards[winner].name}")
+        sleep(3)
         return winner
 
     def update_play_order(self, play_order, trick_winner):

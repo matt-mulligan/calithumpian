@@ -33,6 +33,9 @@ socket.on("play_card", function (data) { play_card(data) });
 //INCOMING EVENT: UPDATE PLAYED CARDS - updates the played card on the client views
 socket.on("update_played_cards", function (data) { update_played_cards(data) });
 
+//INCOMING EVENT - RESET_ALL_ASSETS - cleans all the assets on the screen
+socket.on("reset_all_assets", function () { reset_all_assets() });
+
 
 
 
@@ -147,6 +150,15 @@ function update_played_cards(data) {
     old_players.parentNode.replaceChild(new_players, old_players);
 }
 
+// INCOMING EVENT FUNCTION - RESET_ALL_ASSETS -
+function reset_all_assets() {
+    reset_score_table({"drop_players": true})
+    update_bets_table([])
+    update_played_cards([])
+    update_player_cards({"cards": []})
+
+}
+
 
 
 /*********** OUTGOING EVENT FUNCTIONS************/
@@ -161,6 +173,17 @@ function event_client_chat() {
 function event_start_game() {
     socket.emit("client_start_game", {});
 }
+
+// OUTGOING EVENT - JOIN GAME - player clicked the join game button
+function event_join_game() {
+    socket.emit("join_game")
+}
+
+// OUTGOING EVENT - RESET_GAME - resets the whole game, drops all players, cleans screen assets
+function event_reset_game() {
+    socket.emit("reset_game")
+}
+
 
 // OUTGOING EVENT - PLAY CARD RESPONSE - the client sending the card to the server to be played
 function play_card_response(img_path) {
@@ -201,4 +224,29 @@ function update_player_cards(data) {
         console.log("IMAGE PATH = " + card_img.src);
         document.getElementById("player_card_objs").appendChild(card_img)
     }
+}
+
+//HELPERS - RESET_SCORE_TABLE - cleans the score table. will remove player columns if drop_table is true
+function reset_score_table(data) {
+    let old_scores = document.getElementById("score_table");
+    let new_score = document.createElement("table");
+    new_score.id = "score_table";
+    new_score.classList.add("scores_table");
+
+    let header_row = document.createElement("tr");
+    let header_data = document.createElement("th");
+    header_data.innerText = "Round";
+    header_row.appendChild(header_data);
+    new_score.appendChild(header_row);
+
+    let rounds = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "10", "9", "8", "7", "6", "5", "4", "3", "2"]
+    for (let round_num of rounds) {
+        let row = document.createElement("tr");
+        let data = document.createElement("td");
+        data.innerText = round_num;
+        row.appendChild(data);
+        new_score.appendChild(row);
+    }
+
+    old_scores.parentNode.replaceChild(new_score, old_scores);
 }
