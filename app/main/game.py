@@ -131,6 +131,9 @@ class Calithumpian(object):
                 self.hands[player].append(new_card)
                 print(f"SERVER LOGGING: player {player} draw card {new_card.name}")
 
+        for player, hand in self.hands.items():
+            self.hands[player] = self.deck.order_cards(hand)
+
         events.refresh_player_cards(self.players, self.hands)
 
     def set_trump_suite(self):

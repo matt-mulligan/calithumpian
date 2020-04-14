@@ -80,6 +80,29 @@ class Deck (object):
             if card.img == img_path:
                 return card
 
+    def order_cards(self, cards, descending=False):
+        """
+        helper method that will order a list of card objects
+        :param cards:
+        :param descending: boolean, should the ordering be descending
+        :return:
+        """
+
+        ordered_cards = []
+        suits = ["Spades", "Hearts", "Clubs", "Diamonds"]
+
+        for suit in suits:
+            suited_cards = []
+            for card in cards:
+                if card.suit == suit:
+                    suited_cards.append(card)
+
+            suited_cards.sort(key=lambda x: x.value, reverse=descending)
+            ordered_cards.extend(suited_cards)
+
+        return ordered_cards
+
+
 
 class Card (object):
     """
