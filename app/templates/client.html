@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="play_action">
-                        <ul class="play_action_txt" id="play_action_txt" style="list-style-type: none">Welcome to Calithumpian. Press Start to Begin</ul>
+                        <ul class="play_action_txt" id="play_action_txt" style="list-style-type: none">Welcome to calithumpian, please click 'join game' button</ul>
                     </div>
 
                     <div class="played_cards">
@@ -113,6 +113,15 @@
 
             </div>
 
+        </div>
+
+        {# MODALS - popups that arent naturally displayed #}
+        <div class="modal_bet modal_hidden">
+            <div class="modal_bet_content">
+                <p class="modal_bet_content_text">PLACEHOLDER</p>
+                <input id="bet_input" type="number" placeholder="Enter your bet">
+                <button onclick="modal_send_bet();">Submit</button>
+            </div>
         </div>
 
     </body>

@@ -86,10 +86,15 @@ function update_score_row(data) {
 }
 
 
-// INCOMING EVENT FUNCTION - BET_REPONSE - player needs to be for the round
+// INCOMING EVENT FUNCTION - BET_REPONSE - player needs to bet for the round
 function bet_response(data) {
-    let bet_val = prompt(data.message);
-    socket.emit("bet_response", {"bet": bet_val})
+    // let bet_val = prompt(data.message);
+    // socket.emit("bet_response", {"bet": bet_val})
+    document.querySelector(".modal_bet_content_text").innerHTML = data.message
+    toggle_modal_visable()
+
+
+
 }
 
 
@@ -192,6 +197,12 @@ function play_card_response(img_path) {
 }
 
 
+// OUTGOING EVENT - MODAL SEND BET - sends the bet value from the modal_bet to server
+function modal_send_bet() {
+    let bet_val = document.getElementById("bet_input").value;
+    socket.emit("bet_response", {"bet": bet_val})
+    toggle_modal_visable()
+}
 
 
 
@@ -249,4 +260,8 @@ function reset_score_table(data) {
     }
 
     old_scores.parentNode.replaceChild(new_score, old_scores);
+}
+
+function toggle_modal_visable() {
+    document.querySelector(".modal_bet").classList.toggle("modal_hidden")
 }
