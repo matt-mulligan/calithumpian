@@ -38,7 +38,7 @@
                     <div class="player_chat" id="player_chat"></div>
 
                     <div class="input_chat">
-                        <input class="chat_text_box" type="text" id="send_chat" placeholder="Message"/>
+                        <input class="chat_text_box" type="text" id="send_chat" onkeydown="check_enter_key(event);" placeholder="Message"/>
                         <button class="chat_button" type="button" onclick="event_client_chat();">Send</button>
                     </div>
                 </div>

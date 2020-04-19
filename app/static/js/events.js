@@ -170,6 +170,7 @@ function reset_all_assets() {
 function event_client_chat() {
     let msg_text = document.getElementById('send_chat').value;
     socket.emit("client_chat", {"message": msg_text});
+    document.getElementById('send_chat').value = '';
 }
 
 // OUTGOING EVENT - START_GAME - a player starting the game
@@ -264,4 +265,10 @@ function reset_score_table(data) {
 
 function toggle_modal_visable() {
     document.querySelector(".modal_bet").classList.toggle("modal_hidden")
+}
+
+function check_enter_key(event) {
+    if (event.keyCode === 13) {
+        event_client_chat();
+    }
 }
