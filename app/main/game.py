@@ -123,7 +123,6 @@ class Calithumpian(object):
         # Add delay to make gameplay seem more natural
         sleep(2)
 
-        events.message_player_chat("<p>SYSTEM: Dealing cards to players.")
         events.update_action("Dealing cards to players")
 
         for card_index in range(hand_size):
@@ -143,11 +142,9 @@ class Calithumpian(object):
         :return: Trump suit
         """
 
-        events.message_player_chat("<p>SYSTEM: Selecting trump suit for the round</p>")
         events.update_action("Selecting the trump suit for this round")
         card = self.deck.draw()[0]
 
-        events.message_player_chat(f"<p>SYSTEM: Trump suite this round is {card.suit}</p>")
         events.update_action(f"Trump suit for this round is {card.suit}")
         events.update_trump(card.suit)
         return card.suit
@@ -163,7 +160,6 @@ class Calithumpian(object):
 
         self.bets = {}
         for player in self.order:
-            events.message_player_chat(f"<p>SYSTEM: {player}, how many tricks would you like to bet this round?")
             events.update_action(f"{player}, please enter your bet")
             events.get_player_bet(self.players[player]["sid"], round_num, trump)
 
@@ -175,7 +171,6 @@ class Calithumpian(object):
                 print(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
                 sleep(2)
 
-            events.message_player_chat(f"<p>SYSTEM: {player} bets {self.bets[player]['bet']} tricks this round!")
             events.update_action(f"{player} bets {self.bets[player]['bet']} tricks this round!")
             events.update_bets_table(self.bets)
 
@@ -194,7 +189,6 @@ class Calithumpian(object):
             sleep(1)
 
             self.player_turn = player
-            events.message_player_chat(f"<p>SYSTEM: player {player} please play a card!</p>")
             events.update_action(f"{player}, please play a card")
             # events.play_card(player)
 
@@ -209,7 +203,6 @@ class Calithumpian(object):
 
             card = self.current_trick_played_cards[player]
             self.hands[player].remove(card)
-            events.message_player_chat(f"<p>SYSTEM: player {player} played card {card.name}</p>")
             events.update_action(f"{player} has played {card.name}")
             events.refresh_player_cards(self.players, self.hands)
             events.refresh_played_cards(self.current_trick_played_cards)
@@ -229,7 +222,6 @@ class Calithumpian(object):
 
         events.update_action(f"Determining who won the trick")
         sleep(2)
-        events.message_player_chat("<p>SYSTEM: Determining who won the the trick")
         trump_cards = {}
         lead_cards = {}
         for player, card in played_cards.items():
@@ -244,7 +236,6 @@ class Calithumpian(object):
             winner = self._get_highest_card(lead_cards)
 
         events.update_action(f"Winner of the trick is {winner} with {played_cards[winner].name}")
-        events.message_player_chat(f"<p>SYSTEM: Winner of the trick is {winner} with {played_cards[winner].name}")
         print(f"Winner of the trick is {winner} with {played_cards[winner].name}")
         sleep(3)
         return winner
@@ -269,7 +260,6 @@ class Calithumpian(object):
         """
 
         print("Updating player scores.")
-        events.message_player_chat(f"<p>SYSTEM: Updating the scores!</p>")
         events.update_action(f"Updating the scores!")
 
         for player, bet_vals in bets.items():
@@ -279,7 +269,6 @@ class Calithumpian(object):
                 score = 0
             self.scores[player].append(score)
 
-            events.message_player_chat(f"<p>SYSTEM: player {player} scored {score} points that round</p>")
             events.update_action(f"player {player} scored {score} points that round")
             print(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
             sleep(1)
@@ -293,7 +282,6 @@ class Calithumpian(object):
         """
 
         events.update_action("AND THE FINAL SCORES ARE...")
-        events.message_player_chat("<p>AND THE FINAL SCORES ARE...</p>")
         final_scores = []
         for player, round_scores in self.scores.items():
             final_scores.append((player, sum(round_scores)))
@@ -303,7 +291,6 @@ class Calithumpian(object):
         for score in final_scores:
             sleep(1)
             events.update_action(f"{score[0]} with a score of {score[1]}")
-            events.message_player_chat(f"<p>{score[0]} with a score of {score[1]}</p>")
             print(f"{score[0]} with a score of {score[1]}")
 
         sleep(1)
@@ -318,7 +305,6 @@ class Calithumpian(object):
 
         events.update_action("Determining Player Order")
         self.order = deque(list(self.players.keys()))
-        events.message_player_chat(f"<p>SYSTEM: Player order determined to be {list(self.order)}</p>")
 
     def _setup_scores(self):
         """
@@ -389,7 +375,6 @@ class Calithumpian(object):
         # Add delay to make gameplay seem more natural
         sleep(2)
 
-        events.message_player_chat("<p>SYSTEM: Determining New dealer.</P>")
         events.update_action("Selecting Dealer")
 
         print(f"PREVIOUS DEALER = {self.dealer}")
@@ -400,7 +385,6 @@ class Calithumpian(object):
             self.order.rotate(-1)
             self.dealer = self.order[-1]
         else:
-            events.message_player_chat("<p>SYSTEM: No dealer currently selected, High card for dealer position!</p>")
             events.update_action("No dealer currently selected, high card for dealer position")
 
             self.shuffle_deck()
@@ -408,7 +392,6 @@ class Calithumpian(object):
             for player in self.order:
                 card = self.deck.draw()[0]
                 values.append((player, card.value))
-                events.message_player_chat(f"<p>SYSTEM: Player {player} draws card {card.name}")
                 events.update_action(f"{player} draws {card.name}")
 
             values.sort(reverse=True, key=lambda tup: tup[1])
@@ -418,7 +401,6 @@ class Calithumpian(object):
             reorder_steps = (self.order.index(self.dealer) + 1) * -1
             self.order.rotate(reorder_steps)
 
-        events.message_player_chat(f"SYSTEM: Dealer is {self.dealer}")
         events.update_action(f"Dealer is {self.dealer}")
         events.update_round_order(list(self.order))
 
