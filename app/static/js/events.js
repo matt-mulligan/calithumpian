@@ -209,6 +209,8 @@ function modal_send_bet() {
 function update_element(data) {
     if (data.target_type === "div") {
         $('#' + data.target).append(data.message);
+        let objDiv = document.getElementById(data.target);
+        objDiv.scrollTop = objDiv.scrollHeight;
 
     } else if (data.target_type === "list") {
         if (data.action === "overwrite") {

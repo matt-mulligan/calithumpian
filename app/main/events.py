@@ -42,7 +42,7 @@ def event_reset_game():
     # remove all players from player list
     update_players_list()
 
-    update_action(["Welcome to calithumpian", "please click 'join game' button"])
+    update_action(["Welcome to calithumpian", "please click 'join game' button above"])
 
 
 @socketio.on("disconnect")
