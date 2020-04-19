@@ -6,6 +6,9 @@ var socket = io.connect('http://' + document.domain + ':' + location.port );
 
 
 /*********** INCOMING EVENT LISTENERS ************/
+// INCOMING EVENT - UPDATE_VERSION - updates the version value on the client page
+socket.on("update_version", function(data) { update_version(data) });
+
 // INCOMING EVENT - UPDATE_ELEMENT - handles updating html elements
 socket.on('update_element', function(data) { update_element(data) });
 
@@ -37,6 +40,11 @@ socket.on("reset_all_assets", function () { reset_all_assets() });
 
 
 /*********** INCOMING EVENT FUNCTIONS ************/
+// INCOME EVENT FUNCTION - UPDATE_VERSION - updates the version value on the front page
+function update_version(data) {
+    document.getElementById("title_subtext").innerText = "Version " + data.version + "  -  Matt Mulligan 2020"
+}
+
 
 // INCOMING EVENT FUNCTION - IDENTIFY PLAYER - player sets thyer name and is registred for the game
 function identify_player(data) {

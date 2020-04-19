@@ -6,6 +6,7 @@ from flask_socketio import emit
 from .game import Calithumpian
 from .. import socketio
 from ..main import html_builder
+from app import __version__
 
 HTML_TAG_PARAGRAPH = "p"
 
@@ -19,6 +20,7 @@ PLAYERS = OrderedDict()
 def event_connect():
     client_address = f"{request.remote_addr}:{request.environ['REMOTE_PORT']}"
     print(f"client {request.sid} connected from {client_address}")
+    emit("update_version", {"version": __version__.VERSION})
 
 
 @socketio.on("join_game")
