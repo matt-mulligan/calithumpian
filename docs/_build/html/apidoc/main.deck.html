@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>main.deck module &mdash; Calithumpian 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="main.events module" href="main.events.html" />
+    <link rel="prev" title="main package" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Calithumpian
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">     Calithumpian Module Docs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="main.html">main package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="main.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">main.deck module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.events.html">main.events module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.game.html">main.game module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.html_builder.html">main.html_builder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.routes.html">main.routes module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Calithumpian</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">main</a> &raquo;</li>
+        
+          <li><a href="main.html">main package</a> &raquo;</li>
+        
+      <li>main.deck module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apidoc/main.deck.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-main.deck">
+<span id="main-deck-module"></span><h1>main.deck module<a class="headerlink" href="#module-main.deck" title="Permalink to this headline">¶</a></h1>
+<p>Deck of cards class.
+produces a deck of cards object to be used by the game class</p>
+<dl class="py class">
+<dt id="main.deck.Card">
+<em class="property">class </em><code class="sig-prename descclassname">main.deck.</code><code class="sig-name descname">Card</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">card_value</span></em>, <em class="sig-param"><span class="n">suit_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Card"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Card" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing a single playing card</p>
+<dl class="py method">
+<dt id="main.deck.Card.determine_img_file">
+<code class="sig-name descname">determine_img_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Card.determine_img_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Card.determine_img_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the correct image file path from the static resources
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Card.determine_name">
+<code class="sig-name descname">determine_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Card.determine_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Card.determine_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple method to return the full english name of a card</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Full english name of the card</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Card.determine_rank">
+<code class="sig-name descname">determine_rank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Card.determine_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Card.determine_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the english rank of the card based on the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – integer specifying the rank, Where 2 is the lowest value (representing a two card) and 14 is</p>
+</dd>
+</dl>
+<p>the Highest Value (representing an Ace)
+:return: English rank of the card</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Card.determine_suit">
+<em class="property">static </em><code class="sig-name descname">determine_suit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">suit_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Card.determine_suit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Card.determine_suit" title="Permalink to this definition">¶</a></dt>
+<dd><p>determines the suite of the card based on the given value
+(0=Clubs, 1=Diamonds, 2=Hearts, 3=Spades)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>suit_value</strong> – value of the cards suit</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="main.deck.Deck">
+<em class="property">class </em><code class="sig-prename descclassname">main.deck.</code><code class="sig-name descname">Deck</code><a class="reference internal" href="../_modules/main/deck.html#Deck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="main.deck.Deck.build_all_cards">
+<code class="sig-name descname">build_all_cards</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.build_all_cards"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.build_all_cards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to populate the self.cards_all attribute</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of all 52 playing card objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Deck.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>draws the number of cards from the deck as specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num</strong> – the number of cards to draw</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the number of card objecs specified</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Deck.get_card_from_img_path">
+<code class="sig-name descname">get_card_from_img_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.get_card_from_img_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.get_card_from_img_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper method that will return the correct card object based on the image path provided.
+:param img_path:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Deck.order_cards">
+<code class="sig-name descname">order_cards</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cards</span></em>, <em class="sig-param"><span class="n">descending</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.order_cards"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.order_cards" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper method that will order a list of card objects
+:param cards:
+:param descending: boolean, should the ordering be descending
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Deck.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>resets the cards in the deck. removes all cards from the self.cards_used list and adds all cards to the
+self.cards_avaliable list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.deck.Deck.shuffle">
+<code class="sig-name descname">shuffle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main/deck.html#Deck.shuffle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.deck.Deck.shuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>shuffles the avaliable cards in the deck, reordering self.avaliable_cards object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="main.events.html" class="btn btn-neutral float-right" title="main.events module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="main.html" class="btn btn-neutral float-left" title="main package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Matt Mulligan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

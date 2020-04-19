@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>main.deck &mdash; Calithumpian 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Calithumpian
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apidoc/modules.html">     Calithumpian Module Docs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Calithumpian</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>main.deck</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for main.deck</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Deck of cards class.</span>
+<span class="sd">produces a deck of cards object to be used by the game class</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+
+<div class="viewcode-block" id="Deck"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck">[docs]</a><span class="k">class</span> <span class="nc">Deck</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_all_cards</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards_all</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_used</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Deck.build_all_cards"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.build_all_cards">[docs]</a>    <span class="k">def</span> <span class="nf">build_all_cards</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to populate the self.cards_all attribute</span>
+
+<span class="sd">        :return: list of all 52 playing card objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cards</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span>
+                <span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">suit</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">cards</span></div>
+
+<div class="viewcode-block" id="Deck.shuffle"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.shuffle">[docs]</a>    <span class="k">def</span> <span class="nf">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        shuffles the avaliable cards in the deck, reordering self.avaliable_cards object</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Deck.draw"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        draws the number of cards from the deck as specified.</span>
+
+<span class="sd">        :param num: the number of cards to draw</span>
+<span class="sd">        :return: the number of card objecs specified</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not enough cards left in the deck!&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Select the cards to return</span>
+        <span class="n">cards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span><span class="p">[:</span><span class="n">num</span><span class="p">]</span>
+
+        <span class="c1"># Add the cards to the used list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_used</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span>
+
+        <span class="c1"># remove the cards from the availiable list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span><span class="p">[</span><span class="n">num</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">cards</span></div>
+
+<div class="viewcode-block" id="Deck.reset"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        resets the cards in the deck. removes all cards from the self.cards_used list and adds all cards to the</span>
+<span class="sd">        self.cards_avaliable list</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_used</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cards_avaliable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards_all</span></div>
+
+<div class="viewcode-block" id="Deck.get_card_from_img_path"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.get_card_from_img_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_card_from_img_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        helper method that will return the correct card object based on the image path provided.</span>
+<span class="sd">        :param img_path:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cards_all</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">card</span><span class="o">.</span><span class="n">img</span> <span class="o">==</span> <span class="n">img_path</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">card</span></div>
+
+<div class="viewcode-block" id="Deck.order_cards"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Deck.order_cards">[docs]</a>    <span class="k">def</span> <span class="nf">order_cards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cards</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        helper method that will order a list of card objects</span>
+<span class="sd">        :param cards:</span>
+<span class="sd">        :param descending: boolean, should the ordering be descending</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ordered_cards</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">suits</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Spades&quot;</span><span class="p">,</span> <span class="s2">&quot;Hearts&quot;</span><span class="p">,</span> <span class="s2">&quot;Clubs&quot;</span><span class="p">,</span> <span class="s2">&quot;Diamonds&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="n">suits</span><span class="p">:</span>
+            <span class="n">suited_cards</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="n">cards</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">card</span><span class="o">.</span><span class="n">suit</span> <span class="o">==</span> <span class="n">suit</span><span class="p">:</span>
+                    <span class="n">suited_cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">card</span><span class="p">)</span>
+
+            <span class="n">suited_cards</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">descending</span><span class="p">)</span>
+            <span class="n">ordered_cards</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">suited_cards</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ordered_cards</span></div></div>
+
+
+
+<div class="viewcode-block" id="Card"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Card">[docs]</a><span class="k">class</span> <span class="nc">Card</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing a single playing card</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">card_value</span><span class="p">,</span> <span class="n">suit_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        the Init method of the card class.</span>
+
+<span class="sd">        :param card_value: integer representing the value of the card between 2 and 14</span>
+<span class="sd">        (where 2 represents a 2 and 14 represents and ace)</span>
+<span class="sd">        :param suit_value: Integer representing the suit of the card between 0 and 3 mapping to the suit of the card</span>
+<span class="sd">        (0=Clubs, 1=Diamonds, 2=Hearts, 3=Spades)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">card_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_suit</span><span class="p">(</span><span class="n">suit_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_rank</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_img_file</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Card.determine_suit"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Card.determine_suit">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">determine_suit</span><span class="p">(</span><span class="n">suit_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        determines the suite of the card based on the given value</span>
+<span class="sd">        (0=Clubs, 1=Diamonds, 2=Hearts, 3=Spades)</span>
+
+<span class="sd">        :param suit_value: value of the cards suit</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;Clubs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Diamonds&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;Hearts&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;Spades&quot;</span><span class="p">}[</span><span class="n">suit_value</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Card.determine_rank"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Card.determine_rank">[docs]</a>    <span class="k">def</span> <span class="nf">determine_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns the english rank of the card based on the value.</span>
+
+<span class="sd">        :param value: integer specifying the rank, Where 2 is the lowest value (representing a two card) and 14 is</span>
+<span class="sd">        the Highest Value (representing an Ace)</span>
+<span class="sd">        :return: English rank of the card</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified card value is not in allowed range. Remember that card values should be &quot;</span>
+                             <span class="s2">&quot;between 2 and 14, with 14 being the Ace value.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;Two&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;Three&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;Four&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;Five&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;Six&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;Seven&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s2">&quot;Eight&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;Nine&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">:</span> <span class="s2">&quot;Ten&quot;</span><span class="p">,</span>
+            <span class="mi">11</span><span class="p">:</span> <span class="s2">&quot;Jack&quot;</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span> <span class="s2">&quot;Queen&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="p">:</span> <span class="s2">&quot;King&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">:</span> <span class="s2">&quot;Ace&quot;</span>
+        <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Card.determine_name"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Card.determine_name">[docs]</a>    <span class="k">def</span> <span class="nf">determine_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple method to return the full english name of a card</span>
+
+<span class="sd">        :return: Full english name of the card</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">suit</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="Card.determine_img_file"><a class="viewcode-back" href="../../apidoc/main.deck.html#main.deck.Card.determine_img_file">[docs]</a>    <span class="k">def</span> <span class="nf">determine_img_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sets the correct image file path from the static resources</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
+            <span class="mi">11</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span>
+        <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+
+        <span class="n">suit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">suit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;./static/img/cards/</span><span class="si">{</span><span class="n">val</span><span class="si">}{</span><span class="n">suit</span><span class="si">}</span><span class="s2">.png&quot;</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Matt Mulligan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

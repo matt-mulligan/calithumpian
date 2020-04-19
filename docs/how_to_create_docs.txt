@@ -1,0 +1,6 @@
+1. run pipenv shell from calithumpian folder
+2. change directory to the doc folder
+3. clear any files from apidoc folder that need to be regenerated
+4. run command ".\make.bat clean"
+5. run command "sphinx-apidoc -e -M -o .\apidoc ..\app\main"
+6. run command ".\make.bat html"
