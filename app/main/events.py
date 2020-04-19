@@ -69,18 +69,12 @@ def event_client_identify(data):
                                               f"SYSTEM: New Player {data['player_name']} has entered the game!")
         message_player_chat(message, all=True)
 
-        # update score table with all current players
-        for player in PLAYERS.keys():
-            emit('add_player_to_score', {"player_name": player})
-
-        # add new player to ALL players score tables
-        print("BEFORE CALL")
-        emit('add_player_to_score', {"player_name": data["player_name"]}, broadcast=True)
-        print("AFTER CALL")
-
         # Register Player
         PLAYERS[data["player_name"]] = {"sid": sid}
         print(f"Player '{data['player_name']}' has joined the game!")
+
+        # update all client score tables
+        update_score_table(PLAYERS.keys())
 
         # Update Player List
         update_players_list()
@@ -334,12 +328,42 @@ def refresh_played_cards(played_cards):
     emit("update_played_cards", card_list, broadcast=True)
 
 
-def update_score_table(index, scores):
+def update_score_table(players, scores=None):
     """
-    updates the index specified in the score table with the scores provided
-    :param index:
-    :param scores:
+    updates the entire score table based on the values provided
+    :param players: list of players in order
+    :param scores: dictionary of scores for each round. if none then assumed no scores
     :return:
     """
 
-    emit("update_score_row", {"row_index": index, "player_scores": scores}, broadcast=True)
+    rounds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    headers = ["Round"]
+    padded_scores = {}
+
+    for player in players:
+        headers.append(player)
+        # pad the scores list of each player so that it has as many values as rounds
+        if scores:
+            padded_scores[player] = scores[player] + ["-"] * (len(rounds) - len(scores[player]))
+
+    data = []
+    for index, round_num in enumerate(rounds):
+        data_row = [round_num]
+        if scores:
+            for player in players:
+                data_row.append(padded_scores[player][index])
+        else:
+            data_row += ["-"] * ((len(players)+1) - len(data_row))
+        data.append(data_row)
+
+    data_row = ["TOTAL"]
+    for player in players:
+        if scores:
+            data_row.append(sum(scores[player]))
+        else:
+            data_row.append(0)
+    data.append(data_row)
+
+    print(f"HEADERS = {headers}")
+    print(f"DATA = {data}")
+    emit("update_score_table", {"headers": headers, "data": data}, broadcast=True)

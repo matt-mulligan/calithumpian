@@ -64,7 +64,7 @@ class Calithumpian(object):
             self.set_bets(round_cards, trump_suit)
 
             # logic loop for each trick of the round
-            play_order = self.order
+            play_order = self.order.copy()
             for index in range(round_cards):
                 self.play_cards(play_order)
                 if self._kill:
@@ -77,6 +77,7 @@ class Calithumpian(object):
                 events.refresh_played_cards({})
 
             self.update_scores(self.bets, round_id)
+            events.update_bets_table({})
 
         self.announce_winner()
 
@@ -283,42 +284,7 @@ class Calithumpian(object):
             print(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
             sleep(1)
 
-        self._update_score_table_rows(self.scores, self.players, round_id)
-
-    def _update_score_table_rows(self, scores, players, round_id):
-        """
-        this method will update the score table for the last round as well as the totals
-        :param scores:
-        :param players:
-        :param round_id:
-        :return:
-        """
-
-        total_index = 19
-        round_index = self._get_round_index(round_id)
-
-        total_scores = []
-        round_scores = []
-
-        for player in players:
-            total_scores.append(sum(scores[player]))
-            round_scores.append(scores[player][-1])
-
-        events.update_score_table(total_index, total_scores)
-        events.update_score_table(round_index, round_scores)
-
-    def _get_round_index(self, round_id):
-        """
-        gets the row index of the score table for the specific round
-        :param round_id:
-        :return:
-        """
-
-        end = round_id.split("-")[1]
-        if end == "ASC":
-            return int(round_id.split("-")[0]) - 1
-        else:
-            return 20 - int(round_id.split("-")[0])
+        events.update_score_table(self.players, self.scores)
 
     def announce_winner(self):
         """
@@ -346,7 +312,7 @@ class Calithumpian(object):
 
     def _determine_order(self):
         """
-        randomly determines the order of play for the players in the game
+        determines the order of play for the players in the game
         :return:
         """
 
@@ -426,7 +392,11 @@ class Calithumpian(object):
         events.message_player_chat("<p>SYSTEM: Determining New dealer.</P>")
         events.update_action("Selecting Dealer")
 
+        print(f"PREVIOUS DEALER = {self.dealer}")
+        print(f"PREVIOUS ORDER = {self.order}")
+
         if self.dealer:
+            print("INSIDE DEALER UPDATE")
             self.order.rotate(-1)
             self.dealer = self.order[-1]
         else:
@@ -451,6 +421,9 @@ class Calithumpian(object):
         events.message_player_chat(f"SYSTEM: Dealer is {self.dealer}")
         events.update_action(f"Dealer is {self.dealer}")
         events.update_round_order(list(self.order))
+
+        print(f"NEW DEALER = {self.dealer}")
+        print(f"NEW ORDER = {self.order}")
 
     def _resolve_card_from_img(self, hand, img_path):
         """

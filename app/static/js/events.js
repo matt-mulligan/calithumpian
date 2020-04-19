@@ -12,11 +12,8 @@ socket.on('update_element', function(data) { update_element(data) });
 // INCOMING EVENT - IDENTIFY - Used to identify the player and set their username
 socket.on('identify', function(data) { identify_player(data) });
 
-// INCOMING EVENT - add_player_to_score - adds a player to the score table
-socket.on("add_player_to_score", function (data) { add_column_to_scores(data) });
-
-// INCOMING EVENT - update_score_row - updates a row of the score table
-socket.on("update_score_row", function (data) { update_score_row(data) });
+// INCOMING EVENT - update_score_table - updates a row of the score table
+socket.on("update_score_table", function (data) { update_score_table(data) });
 
 // INCOMING EVENT - update_player_cards - updates the specific players held card
 socket.on("update_player_cards", function (data) { update_player_cards(data) });
@@ -54,34 +51,35 @@ function identify_player(data) {
     }
 }
 
-// INCOMING EVENT FUNCTION - ADD_COLUMN_TO_SCORES - adds a column to the table specified with the heading specified.
-// all other values will be "-"
-function add_column_to_scores(data) {
 
-    let table = document.getElementById("score_table");
-    let index = 0;
+// INCOMING EVENT FUNCTION - UPDATE_SCORE_TABLE - updates the entire score table
+function update_score_table(data) {
+    let old_table = document.getElementById("score_table");
+    let new_table = document.createElement("table");
 
-    for(let row of table.rows) {
-        var cell = row.insertCell(-1);
-        if (index === 0) {
-            cell.innerText = data.player_name;
-        } else {
-            cell.innerText = "-";
+    new_table.classList.add("scores_table");
+    new_table.id = "score_table";
+
+    let headers = document.createElement("tr");
+    for (let index=0; index < data.headers.length; index++) {
+        console.log("HEADER VALUE IS " + data.headers[index])
+        let header_data = document.createElement("th");
+        header_data.innerText = data.headers[index];
+        headers.appendChild(header_data);
+    }
+    new_table.appendChild(headers);
+
+    for (let row_index=0; row_index < data.data.length; row_index++) {
+        let data_row = document.createElement("tr")
+        for (let item_index=0; item_index < data.data[row_index].length; item_index++) {
+            let table_data = document.createElement("td");
+            table_data.innerText = data.data[row_index][item_index];
+            data_row.appendChild(table_data);
         }
-        index += 1;
+        new_table.appendChild(data_row);
     }
-}
 
-// INCOMING EVENT FUNCTION - UPDATE_SCORE_ROW - updates the player values for the score table for a specific round
-function update_score_row(data) {
-    let table = document.getElementById("score_table");
-    let row_index = data.row_index;
-    let values = data.player_scores;
-
-    let row = table.rows[row_index];
-    for (let cell_index=1; cell_index <= values.length; cell_index++) {
-        row.cells.item(cell_index).innerText = values[cell_index-1]
-    }
+    old_table.parentNode.replaceChild(new_table, old_table);
 
 }
 
