@@ -22,7 +22,7 @@ class Deck (object):
 
         cards = list()
 
-        for suit in range(0, 3):
+        for suit in range(0, 4):
             for value in range(2, 15):
                 cards.append(Card(value, suit))
 
