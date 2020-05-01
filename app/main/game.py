@@ -190,7 +190,6 @@ class Calithumpian(object):
 
             self.player_turn = player
             events.update_action(f"{player}, please play a card")
-            # events.play_card(player)
 
             # check if player choice has come back and been validated yet.
             while player not in self.current_trick_played_cards.keys():
@@ -198,8 +197,8 @@ class Calithumpian(object):
                     print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
                     return
                 print(f"WAITING FOR PLAYER {player} TO PICK A CARD")
-                # wait 2 seconds then reassess
-                sleep(2)
+                # wait 0.5 seconds then reassess
+                sleep(0.5)
 
             card = self.current_trick_played_cards[player]
             self.hands[player].remove(card)
@@ -442,4 +441,7 @@ class Calithumpian(object):
         :return:
         """
         card = self.deck.get_card_from_img_path(card_img)
-        self.current_trick_played_cards[player] = card
+        if player not in self.current_trick_played_cards.keys():
+            self.current_trick_played_cards[player] = card
+        else:
+            print(f"PLAYER '{player}' HAS ALREADY PLAYED A CARD THIS TRICK!!!")

@@ -153,18 +153,6 @@ def get_player_bet(player_sid, round, trump):
     emit("bet", {"action": "place_bet", "message": message}, room=player_sid)
 
 
-def play_card(player):
-    """
-    sends an event to a specific client to play a card
-    :param player:
-    :return:
-    """
-
-    player_sid = PLAYERS[player]["sid"]
-    message = f"Player {player}, its your turn to play a card! please click a card from your hand to play it"
-    emit("play_card", {"message": message}, room=player_sid)
-
-
 # -- HELPERS --------------------
 def get_player_name_from_sid(sid):
     """
