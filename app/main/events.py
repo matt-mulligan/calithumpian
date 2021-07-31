@@ -1,3 +1,4 @@
+import logging
 from collections import OrderedDict
 
 from flask import request
@@ -14,12 +15,14 @@ GAME = Calithumpian()
 
 PLAYERS = OrderedDict()
 
+logger = logging.getLogger(__name__)
+
 
 # --- INCOMING EVENTS --------------------
 @socketio.on("connect")
 def event_connect():
     client_address = f"{request.remote_addr}:{request.environ['REMOTE_PORT']}"
-    print(f"client {request.sid} connected from {client_address}")
+    logger.info(f"client {request.sid} connected from {client_address}")
     emit("update_version", {"version": __version__.VERSION})
 
 
@@ -31,14 +34,14 @@ def event_join_game():
 
 @socketio.on("reset_game")
 def event_reset_game():
-    print("INSIDE RESET!")
+    logger.info("INSIDE RESET!")
     for player in PLAYERS.keys():
-        print(f"PLAYER IS {player}")
+        logger.info(f"PLAYER IS {player}")
         del PLAYERS[player]
     emit("reset_all_assets", broadcast=True)
 
     # # stop current iteration of game
-    print("Killing game loop")
+    logger.info("Killing game loop")
     GAME.kill_game()
 
     # remove all players from player list
@@ -49,7 +52,7 @@ def event_reset_game():
 
 @socketio.on("disconnect")
 def event_disconnect():
-    print(f"Player {request.sid} left :(")
+    logger.info(f"Player {request.sid} left :(")
     player = get_player_name_from_sid(request.sid)
     message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH, f"SYSTEM: player {player} has left the game :(")
     message_player_chat(message, all=True)
@@ -73,7 +76,7 @@ def event_client_identify(data):
 
         # Register Player
         PLAYERS[data["player_name"]] = {"sid": sid}
-        print(f"Player '{data['player_name']}' has joined the game!")
+        logger.info(f"Player '{data['player_name']}' has joined the game!")
 
         # update all client score tables
         update_score_table(PLAYERS.keys())
@@ -82,7 +85,7 @@ def event_client_identify(data):
         update_players_list()
 
     else:
-        print("duplicate player name found! Requesting a new name")
+        logger.info("duplicate player name found! Requesting a new name")
         message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH,
                                                       f"SYSTEM: The player name given is already in the game, please choose again")
         emit("identify", {"action": "identify_duplicate", "message": message})
@@ -92,7 +95,7 @@ def event_client_identify(data):
 def event_client_chat(data):
     player = get_player_name_from_sid(request.sid)
     message = html_builder.build_text_tag(HTML_TAG_PARAGRAPH, f"{player}: {data['message']}")
-    print(f"Player {request.sid} sent message {data['message']} to player chat.")
+    logger.info(f"Player {request.sid} sent message {data['message']} to player chat.")
     message_player_chat(message, all=True)
 
 
@@ -108,7 +111,7 @@ def event_bet_response(data):
         bet = int(data['bet'])
         GAME.set_player_bet(player, {"bet": bet, "wins": 0})
     except ValueError:
-        print(f"player has passed back bad bet value '{data['bet']}', sending new bet emit")
+        logger.info(f"player has passed back bad bet value '{data['bet']}', sending new bet emit")
         message = "Bad bet value received :(  bet values should be integers, and if your smart, " \
                   "equal to or lower to the number of tricks in the round."
         emit("bet", {"message": message})
@@ -124,7 +127,7 @@ def event_played_card_response(data):
             emit("play_card", {"message": message}, room=request.sid)
         else:
             GAME.add_card_to_played_cards(player, data["img_path"])
-            print(f"CARD ADDED TO PLAYED CARD FOR {player}")
+            logger.info(f"CARD ADDED TO PLAYED CARD FOR {player}")
 
 
 # --- OUTGOING EVENTS --------------------
@@ -136,7 +139,7 @@ def update_player_cards(player_name, player_sid, card_imgs):
     :param card_imgs:
     :return:
     """
-    print(f"SENDING CARDS TO PLAYER {player_name} as sid {player_sid}")
+    logger.info(f"SENDING CARDS TO PLAYER {player_name} as sid {player_sid}")
     emit("update_player_cards", {"cards": card_imgs}, room=player_sid)
 
 
@@ -354,6 +357,6 @@ def update_score_table(players, scores=None):
             data_row.append(0)
     data.append(data_row)
 
-    print(f"HEADERS = {headers}")
-    print(f"DATA = {data}")
+    logger.info(f"HEADERS = {headers}")
+    logger.info(f"DATA = {data}")
     emit("update_score_table", {"headers": headers, "data": data}, broadcast=True)
