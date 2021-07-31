@@ -10,5 +10,3 @@ flask = "*"
 flask-socketio = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
-[requires]

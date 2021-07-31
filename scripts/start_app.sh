@@ -16,7 +16,7 @@ scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 application="calithumpian"
 logDate=$(date '+%Y%m%d_%H%M%S')
 logName="calithumpian_webserver_$logDate.log"
-logPath="$HOME/application_logs/$application"
+logPath="/var/application_logs/$application"
 logPathFull="$logPath/$logName"
 entryPoint="calithumpian.py"
 
