@@ -16,6 +16,14 @@ ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC"
 # ROUNDS = ["2-ASC", "3-ASC", "4-ASC"]
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 
 class Calithumpian(object):
@@ -167,11 +175,11 @@ class Calithumpian(object):
             events.get_player_bet(self.players[player]["sid"], round_num, trump)
 
             # blocking waiting for the value to come back and be set
+            logger.info(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
             while player not in self.bets.keys():
                 if self._kill:
                     logger.info("KILL SIGNAL RECIEVED FOR GAME. ENDING PLAY")
                     return
-                logger.info(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
                 sleep(2)
 
             events.update_action(f"{player} bets {self.bets[player]['bet']} tricks this round!")
@@ -195,11 +203,11 @@ class Calithumpian(object):
             events.update_action(f"{player}, please play a card")
 
             # check if player choice has come back and been validated yet.
+            logger.info(f"WAITING FOR PLAYER {player} TO PICK A CARD")
             while player not in self.current_trick_played_cards.keys():
                 if self._kill:
                     logger.info("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
                     return
-                logger.info(f"WAITING FOR PLAYER {player} TO PICK A CARD")
                 # wait 0.5 seconds then reassess
                 sleep(0.5)
 

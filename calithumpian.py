@@ -16,4 +16,4 @@ logger.addHandler(ch)
 if __name__ == '__main__':
     logger.info("Starting Calithumpian socketIO App")
     socketio.run(app, host="0.0.0.0")
-    logger.info("App Running")
+
