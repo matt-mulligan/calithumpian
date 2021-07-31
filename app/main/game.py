@@ -2,6 +2,7 @@
 GAME LOGIC MODULE
 holds and runs all the calithumpian game logic.
 """
+import logging
 import random
 from collections import deque, OrderedDict
 from time import sleep
@@ -13,6 +14,16 @@ ROUNDS = ["2-ASC", "3-ASC", "4-ASC", "5-ASC", "6-ASC", "7-ASC", "8-ASC", "9-ASC"
           "10-DES", "9-DES", "8-DES", "7-DES", "6-DES", "5-DES", "4-DES", "3-DES", "2-DES"]
 
 # ROUNDS = ["2-ASC", "3-ASC", "4-ASC"]
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 
 class Calithumpian(object):
@@ -52,7 +63,7 @@ class Calithumpian(object):
 
         for round_id in ROUNDS:
             if self._kill:
-                print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                logger.info("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
                 return
             round_cards = int(round_id.split("-")[0])
             events.update_round(round_cards)
@@ -68,7 +79,7 @@ class Calithumpian(object):
             for index in range(round_cards):
                 self.play_cards(play_order)
                 if self._kill:
-                    print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                    logger.info("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
                     return
                 trick_winner = self.determine_trick_winner(self.current_trick_played_cards, self.current_trick_lead_suit, trump_suit)
                 self.bets[trick_winner]["wins"] += 1
@@ -129,7 +140,7 @@ class Calithumpian(object):
             for player in self.order:
                 new_card = self.deck.draw()[0]
                 self.hands[player].append(new_card)
-                print(f"SERVER LOGGING: player {player} draw card {new_card.name}")
+                logger.info(f"SERVER LOGGING: player {player} draw card {new_card.name}")
 
         for player, hand in self.hands.items():
             self.hands[player] = self.deck.order_cards(hand)
@@ -164,11 +175,11 @@ class Calithumpian(object):
             events.get_player_bet(self.players[player]["sid"], round_num, trump)
 
             # blocking waiting for the value to come back and be set
+            logger.info(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
             while player not in self.bets.keys():
                 if self._kill:
-                    print("KILL SIGNAL RECIEVED FOR GAME. ENDING PLAY")
+                    logger.info("KILL SIGNAL RECIEVED FOR GAME. ENDING PLAY")
                     return
-                print(f"WAITING FOR BET VALUE FROM PLAYER {player} to be returned")
                 sleep(2)
 
             events.update_action(f"{player} bets {self.bets[player]['bet']} tricks this round!")
@@ -192,11 +203,11 @@ class Calithumpian(object):
             events.update_action(f"{player}, please play a card")
 
             # check if player choice has come back and been validated yet.
+            logger.info(f"WAITING FOR PLAYER {player} TO PICK A CARD")
             while player not in self.current_trick_played_cards.keys():
                 if self._kill:
-                    print("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
+                    logger.info("KILL SIGNAL RECIEVED FOR GAME INSTANCE. ENDING PLAY")
                     return
-                print(f"WAITING FOR PLAYER {player} TO PICK A CARD")
                 # wait 0.5 seconds then reassess
                 sleep(0.5)
 
@@ -235,7 +246,7 @@ class Calithumpian(object):
             winner = self._get_highest_card(lead_cards)
 
         events.update_action(f"Winner of the trick is {winner} with {played_cards[winner].name}")
-        print(f"Winner of the trick is {winner} with {played_cards[winner].name}")
+        logger.info(f"Winner of the trick is {winner} with {played_cards[winner].name}")
         sleep(3)
         return winner
 
@@ -258,7 +269,7 @@ class Calithumpian(object):
         :return: None
         """
 
-        print("Updating player scores.")
+        logger.info("Updating player scores.")
         events.update_action(f"Updating the scores!")
 
         for player, bet_vals in bets.items():
@@ -269,7 +280,7 @@ class Calithumpian(object):
             self.scores[player].append(score)
 
             events.update_action(f"player {player} scored {score} points that round")
-            print(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
+            logger.info(f"player {player} scored {score} that round, bringing their total to {sum(self.scores[player])}")
             sleep(1)
 
         events.update_score_table(self.players, self.scores)
@@ -286,15 +297,15 @@ class Calithumpian(object):
             final_scores.append((player, sum(round_scores)))
         final_scores.sort(reverse=True, key=lambda tup: tup[1])
 
-        print("AND THE FINAL SCORES ARE:")
+        logger.info("AND THE FINAL SCORES ARE:")
         for score in final_scores:
             sleep(1)
             events.update_action(f"{score[0]} with a score of {score[1]}")
-            print(f"{score[0]} with a score of {score[1]}")
+            logger.info(f"{score[0]} with a score of {score[1]}")
 
         sleep(1)
         events.update_action(f"Thanks for playing! press start game to play again")
-        print("THANKS FOR PLAYING!!!")
+        logger.info("THANKS FOR PLAYING!!!")
 
     def _determine_order(self):
         """
@@ -376,11 +387,11 @@ class Calithumpian(object):
 
         events.update_action("Selecting Dealer")
 
-        print(f"PREVIOUS DEALER = {self.dealer}")
-        print(f"PREVIOUS ORDER = {self.order}")
+        logger.info(f"PREVIOUS DEALER = {self.dealer}")
+        logger.info(f"PREVIOUS ORDER = {self.order}")
 
         if self.dealer:
-            print("INSIDE DEALER UPDATE")
+            logger.info("INSIDE DEALER UPDATE")
             self.order.rotate(-1)
             self.dealer = self.order[-1]
         else:
@@ -403,8 +414,8 @@ class Calithumpian(object):
         events.update_action(f"Dealer is {self.dealer}")
         events.update_round_order(list(self.order))
 
-        print(f"NEW DEALER = {self.dealer}")
-        print(f"NEW ORDER = {self.order}")
+        logger.info(f"NEW DEALER = {self.dealer}")
+        logger.info(f"NEW ORDER = {self.order}")
 
     def _resolve_card_from_img(self, hand, img_path):
         """
@@ -444,4 +455,4 @@ class Calithumpian(object):
         if player not in self.current_trick_played_cards.keys():
             self.current_trick_played_cards[player] = card
         else:
-            print(f"PLAYER '{player}' HAS ALREADY PLAYED A CARD THIS TRICK!!!")
+            logger.info(f"PLAYER '{player}' HAS ALREADY PLAYED A CARD THIS TRICK!!!")
