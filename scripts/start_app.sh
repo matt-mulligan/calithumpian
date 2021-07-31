@@ -31,7 +31,7 @@ echo "current directory is $currentDir"
 
 # run pipenv
 echo "Command to run is 'pipenv run python $entryPoint > $logPathFull &'"
-nohup pipenv run python $entryPoint > "$logPathFull" &
+nohup pipenv run python $entryPoint &> "$logPathFull" &
 
 # Send end message to console
 echo "$application started! logs can be found at $logPathFull"
